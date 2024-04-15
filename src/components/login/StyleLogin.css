@@ -1,0 +1,21 @@
+.bg-main {
+  background-image: url("../../assets/img/logocyberplay.png");
+  /* background-color: #e4e1da; */
+  background-color: white;
+  width: 100vw;
+  height: 100vh;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-size: 40%;
+  z-index: 1;
+  /* opacity: 0.6; */
+}
+
+.bg-main::after {
+  content: "";
+  background-color: rgba(0, 0, 0, 0.123);
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+}
