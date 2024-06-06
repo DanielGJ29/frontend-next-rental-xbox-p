@@ -1,10 +1,10 @@
 // next
-import { SessionProvider } from 'next-auth/react';
 
 import Image from 'next/image';
 //import styles from "./page.module.css";
 
 import Dashboard from '@/components/dashboard/Dashboard';
+//import Dashboard from './dashboard/page';
 import DashboardLayout from '@/layout/dashboardLayout';
 
 export default function Home() {

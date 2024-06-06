@@ -91,7 +91,7 @@ const CustomDataGrid = (props: Props) => {
     const { name, customToolbarActions, hideToolbarActions } = props;
 
     return (
-      <GridToolbarContainer>
+      <GridToolbarContainer sx={{ mb: 2 }}>
         {!hideToolbarActions?.includes('quickfilter') && <GridToolbarQuickFilter placeholder="Buscar" />}
         {(!hideToolbarActions?.includes('columns') ||
           !hideToolbarActions?.includes('filter') ||

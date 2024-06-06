@@ -3,7 +3,9 @@
 @import '@fontsource/roboto/500.css';
 @import '@fontsource/roboto/700.css';
 
-
+.swal2-container {
+  z-index: 2000;
+}
 /* :root {
   --max-width: 1100px;
   --border-radius: 12px;
