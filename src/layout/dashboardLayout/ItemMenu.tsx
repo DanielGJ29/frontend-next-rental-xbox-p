@@ -108,8 +108,8 @@ const ItemMenu = () => {
             }
 
             if (item.children.length > 0) {
-              console.log('PATHNAME==>', pathName);
-              console.log('ITEM.URL==>', item.children);
+              // console.log('PATHNAME==>', pathName);
+              // console.log('ITEM.URL==>', item.children);
 
               return (
                 <div key={item.name}>
@@ -137,7 +137,7 @@ const ItemMenu = () => {
             return <ChildrenItem key={item.name} name={item.name} url={item.url} icon={icon} status={false} />;
           })
         : [1, 2, 3, 4].map(() => (
-            <Link key={Math.random()} style={{ textDecoration: 'none' }} className={status ? 'active' : ''} href={''}>
+            <Link key={Math.random()} href={''}>
               <ListItemButton>
                 <Skeleton variant="rounded" width={20} height={25}>
                   <ListItemButton></ListItemButton>

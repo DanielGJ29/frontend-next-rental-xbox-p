@@ -3,6 +3,7 @@ import axiosServices from '@/utils/axios';
 //Interface
 import { INewNameconsoles } from '@/interfaces/consoles';
 
+//CRUD CONSOLES
 export const getAllConsoles = async () => {
   const response = await axiosServices.get('/videoGames');
   const result = await response.data;

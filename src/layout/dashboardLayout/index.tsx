@@ -293,27 +293,10 @@ export default function DashboardLayout({ children }: Props) {
         </Toolbar>
         <Divider />
         <List component="nav">
-          {/* {mainListItems} */}
-          {/* {mainMenu.map((item: any, index) => {
-            let Icon = item.icon;
-            let IconMenu = <Icon />;
-            return (
-              <Link key={index} className={'active'} href={`/${item.name}`}>
-                <ListItemButton>
-                  <ListItemIcon>{IconMenu}</ListItemIcon>
-                  <ListItemText sx={{ textTransform: 'capitalize' }} primary={item.name} />
-                </ListItemButton>
-              </Link>
-            );
-          })} */}
-          {/* {menuItems.map((item: any) => (
-            <ItemMenu key={item.name} name={item.name} path={item.url} status={true} iconName={item.icon} loading={loading} />
-          ))} */}
-
           <ItemMenu />
 
           <Divider sx={{ my: 1 }} />
-          {secondaryListItems}
+          {/* {secondaryListItems} */}
         </List>
       </Drawer>
 

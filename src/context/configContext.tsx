@@ -23,26 +23,18 @@ type ConfigProviderProps = {
 const ConfigProvider = ({ children }: ConfigProviderProps) => {
   const [state, setState] = useState(initialState);
 
-  console.log('soy el provider');
-
   useLayoutEffect(() => {
-    console.log('se lanzo el useLayout desde context');
-    // const fetchData = async () => {
-    // const res = await fetch('/api/auth/protected');
-    // const json = await res?.json();
     if (!state.loginStatus) {
-      console.log('no esta logeado no traemos el menu');
       return;
     }
-    console.log('logeado traemos el menu');
+
     onChangeLoading(true);
     sistemaAPI.getAllMenu().then((response) => {
       setState({ ...state, menuItems: response.data });
     });
     onChangeLoading(false);
 
-    // };
-    //fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.loginStatus]);
 
   const onChangeMode = (mode: any) => {
