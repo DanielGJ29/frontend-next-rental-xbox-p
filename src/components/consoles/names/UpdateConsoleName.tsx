@@ -69,7 +69,6 @@ const UpdateConsoleName = (props: Props) => {
 
   const handleClose = () => {
     setOpen(false);
-    setName('');
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

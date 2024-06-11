@@ -1,8 +1,6 @@
 //Axios
 import axiosServices from '@/utils/axios';
 
-import { INewUser } from '@/interfaces/sistema';
-
 const BASE_PATH = '';
 
 //CRUD USERS

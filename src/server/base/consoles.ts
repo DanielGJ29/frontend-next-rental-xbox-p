@@ -9,15 +9,41 @@ import {
   newModels,
   updateModels,
   getByIdModels,
-  deleteByIdModels
+  deleteByIdModels,
+  NewConsole,
+  getByIdConsole,
+  updateConsole,
+  deleteConsole,
+  getSerialNumberConsole
 } from '../endpoints/consoles';
 
 //Interface
-import { INewNameconsoles } from '@/interfaces/consoles';
+import { INewNameconsoles, INewConsole, INewModel } from '@/interfaces/consoles';
 
 export class ConsolesAPI implements ConsolesAPI {
+  //CRUD CONSOLES
   getAllConsoles = () => {
     return getAllConsoles();
+  };
+
+  NewConsole = (body: FormData) => {
+    return NewConsole(body);
+  };
+
+  getByIdConsole = (id: number) => {
+    return getByIdConsole(id);
+  };
+
+  updateConsole = (id: number, body: FormData) => {
+    return updateConsole(id, body);
+  };
+
+  deleteConsole = (id: number) => {
+    return deleteConsole(id);
+  };
+
+  getSerialNumberConsole = () => {
+    return getSerialNumberConsole();
   };
 
   //CRUD NAME CONSOLES
@@ -45,10 +71,10 @@ export class ConsolesAPI implements ConsolesAPI {
     return getAllModels();
   };
 
-  newModels = (body: INewNameconsoles) => {
+  newModels = (body: INewModel) => {
     return newModels(body);
   };
-  updateModels = (id: number, body: INewNameconsoles) => {
+  updateModels = (id: number, body: INewModel) => {
     return updateModels(id, body);
   };
 

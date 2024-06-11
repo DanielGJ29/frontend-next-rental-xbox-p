@@ -218,7 +218,6 @@ export const NewUser = (props: Props) => {
     newFormData.append('userName', formData.userName);
     newFormData.append('password', formData.password);
 
-    console.log('formData to send', newFormData);
     setLoading(true);
     sistemaAPI
       .newUser(newFormData)

@@ -119,6 +119,7 @@ const ItemMenu = () => {
                     {item.name === nameCollapse && open ? <ExpandLess /> : <ExpandMore />}
                   </ListItemButton>
                   <Collapse in={item.name === nameCollapse && open} timeout="auto" unmountOnExit>
+                    {/* <List component="div" disablePadding> */}
                     <List component="div" disablePadding>
                       {item.children.map((item: any) => {
                         let icon;

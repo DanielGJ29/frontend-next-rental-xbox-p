@@ -149,7 +149,6 @@ export const UpdateUser = (props: Props) => {
   useEffect(() => {
     setLoading(true);
     sistemaAPI.getUserById(id).then((response) => {
-      console.log('response id', response.data);
       setLoading(false);
       setFormData({
         id: response.data.id,

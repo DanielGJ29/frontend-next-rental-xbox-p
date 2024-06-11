@@ -1,11 +1,66 @@
 import axiosServices from '@/utils/axios';
 
 //Interface
-import { INewNameconsoles } from '@/interfaces/consoles';
+import { INewNameconsoles, INewConsole, INewModel } from '@/interfaces/consoles';
 
 //CRUD CONSOLES
 export const getAllConsoles = async () => {
   const response = await axiosServices.get('/videoGames');
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const NewConsole = async (body: FormData) => {
+  const response = await axiosServices.post('/videoGames', body);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const getByIdConsole = async (id: number) => {
+  const response = await axiosServices.get(`/videoGames/${id}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const updateConsole = async (id: number, body: FormData) => {
+  const response = await axiosServices.patch(`/videoGames/${id}`, body);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const deleteConsole = async (id: number) => {
+  const response = await axiosServices.delete(`/videoGames/${id}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const getSerialNumberConsole = async () => {
+  const response = await axiosServices.get(`/videoGame/serialNumber`);
   const result = await response.data;
 
   if ((result.status = 'success')) {
@@ -83,7 +138,7 @@ export const getAllModels = async () => {
   }
 };
 
-export const newModels = async (body: INewNameconsoles) => {
+export const newModels = async (body: INewModel) => {
   const response = await axiosServices.post('/videoGameModel', body);
   const result = await response.data;
 
@@ -94,7 +149,7 @@ export const newModels = async (body: INewNameconsoles) => {
   }
 };
 
-export const updateModels = async (id: number, body: INewNameconsoles) => {
+export const updateModels = async (id: number, body: INewModel) => {
   const response = await axiosServices.patch(`/videoGameModel/${id}`, body);
   const result = await response.data;
 

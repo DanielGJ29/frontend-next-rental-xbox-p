@@ -19,19 +19,17 @@ import CustomDataGrid from '@/components/shared/CustomDataGrid';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 
 //Interfaces
-import { INameConsoles } from '@/interfaces/consoles';
+import { IConsole } from '@/interfaces/consoles';
 
 //Components
 import NewConsole from './NewConsole';
+import UpdateConsole from './UpdateConsole';
 
 //utils
 import { formatDate } from '@/services/utils';
 
 //Alert
 import Swal from 'sweetalert2';
-
-//Component
-import UpdateConsole from './UpdateConsole';
 
 const ListConsoles = () => {
   //***********************************************************USE STATE*****************************************************************
@@ -43,7 +41,7 @@ const ListConsoles = () => {
 
   //***********************************************************USE EFFECT*****************************************************************
   useEffect(() => {
-    getListNames();
+    getListConsoles();
   }, []);
 
   //***********************************************************FUNCTIONS*****************************************************************
@@ -51,9 +49,10 @@ const ListConsoles = () => {
     setOpenNewModal(true);
   };
 
-  const getListNames = () => {
-    consolesApi.getAllConsolesNames().then((response) => {
+  const getListConsoles = () => {
+    consolesApi.getAllConsoles().then((response) => {
       setRows(response.data);
+      console.log('consoles', response.data);
     });
   };
 
@@ -63,16 +62,14 @@ const ListConsoles = () => {
     setOpenUpdateModal(true);
   };
 
-  const handleDeleteClick = (row: INameConsoles) => {
+  const handleDeleteClick = (row: IConsole) => {
     console.log('DELETE ROW', row);
-
-    console.log('usr a delete', row);
 
     Swal.fire({
       title: '¿Esta seguro?',
 
       html: `
-        Se eliminara: <b>${row.name}</b>,
+        Se eliminara: <b>${row.videoGameName.name}</b>,
         con ID: <b>${row.id}</b>,
         
       `,
@@ -85,14 +82,14 @@ const ListConsoles = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setLoading(true);
-        consolesApi.deleteByIdConsolesNames(Number(row.id)).then((response) => {
+        consolesApi.deleteConsole(Number(row.id)).then((response) => {
           setLoading(false);
           console.log(response);
           if (response.status === 'success') {
-            getListNames();
+            getListConsoles();
             Swal.fire({
               title: '¡Eliminado!',
-              text: 'Nombre de consola eliminado correctamente.',
+              text: 'Consola eliminada correctamente.',
               icon: 'success'
             });
           } else {
@@ -109,7 +106,22 @@ const ListConsoles = () => {
   //***********************************************************COLUMNS*****************************************************************
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
-    { field: 'name', headerName: 'Nombre', flex: 1, minWidth: 180 },
+    { field: 'videoGameName', headerName: 'Nombre', flex: 1, minWidth: 180, valueGetter: (params: any) => params.name },
+    { field: 'videoGameModel', headerName: 'Modelo', flex: 1, minWidth: 180, valueGetter: (params: any) => params.model },
+    { field: 'color', headerName: 'Color', flex: 1, minWidth: 100 },
+    { field: 'serialNumber', headerName: 'Numero de serie', flex: 1, minWidth: 150 },
+    { field: 'hardHDD', headerName: 'Disco duro', flex: 1, minWidth: 100 },
+    {
+      field: 'status',
+      headerName: 'Estatus',
+      flex: 1,
+      minWidth: 100,
+      valueGetter: (params: any) => {
+        if (params === 'active') {
+          return 'activo';
+        }
+      }
+    },
     {
       field: 'createdAt',
       headerName: 'Creado',
@@ -123,7 +135,20 @@ const ListConsoles = () => {
         return formatDate(value);
       }
     },
-    { field: 'status', headerName: 'Estatus', flex: 1, minWidth: 100 },
+    {
+      field: 'updatedAt',
+      headerName: 'Modificado',
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 150,
+      valueFormatter: (value) => {
+        if (!value) {
+          return value;
+        }
+        return formatDate(value);
+      }
+    },
+
     {
       field: 'actions',
       type: 'actions',
@@ -178,8 +203,8 @@ const ListConsoles = () => {
           />
         </Paper>
 
-        <NewConsole open={openNewModal} setOpen={setOpenNewModal} getListNames={getListNames} />
-        {id && <UpdateConsole open={openUpdateModal} setOpen={setOpenUpdateModal} id={id} getListNames={getListNames} />}
+        <NewConsole open={openNewModal} setOpen={setOpenNewModal} getListConsoles={getListConsoles} />
+        {id && <UpdateConsole open={openUpdateModal} setOpen={setOpenUpdateModal} id={id} getListConsoles={getListConsoles} />}
       </div>
     </div>
   );
