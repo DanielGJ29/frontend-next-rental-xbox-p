@@ -41,3 +41,21 @@ export interface INewModel {
 export interface IModels extends INewModel {
   id: number;
 }
+
+//GAMEPADS
+
+export interface INewGamepad {
+  videoGameNameId: string;
+  color: string;
+  serialNumber: string;
+  connectionType: string;
+}
+
+export interface IGamepad {
+  id: number;
+  videoGameNameId: number;
+  color: string;
+  serialNumber: string;
+  connectionType: string;
+  videoGameName: { id: number; name: string };
+}

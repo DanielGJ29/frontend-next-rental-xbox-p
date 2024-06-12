@@ -126,8 +126,6 @@ export default function DashboardLayout({ children }: Props) {
     }
   }, [session]);
 
-  console.log('menu item', menuItems);
-
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };

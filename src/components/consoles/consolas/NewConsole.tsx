@@ -159,18 +159,6 @@ const NewConsole = (props: Props) => {
   };
 
   const handleSubmit = () => {
-    // if (!name) {
-    //   Swal.fire({
-    //     position: 'center',
-    //     icon: 'error',
-    //     title: 'Nombre requerido',
-    //     showConfirmButton: false,
-    //     timer: 2500
-    //   });
-
-    //   return;
-    // }
-
     const newFormData = new FormData();
     newFormData.append('nameId', formData.nameId);
     newFormData.append('modelId', formData.modelId);

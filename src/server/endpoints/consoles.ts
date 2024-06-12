@@ -1,7 +1,7 @@
 import axiosServices from '@/utils/axios';
 
 //Interface
-import { INewNameconsoles, INewConsole, INewModel } from '@/interfaces/consoles';
+import { INewNameconsoles, INewConsole, INewModel, INewGamepad } from '@/interfaces/consoles';
 
 //CRUD CONSOLES
 export const getAllConsoles = async () => {
@@ -173,6 +173,63 @@ export const getByIdModels = async (id: number) => {
 
 export const deleteByIdModels = async (id: number) => {
   const response = await axiosServices.delete(`/videoGameModel/${id}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+//CRUD GAMEPADS
+
+export const getGamepads = async () => {
+  const response = await axiosServices.get(`/gamepads`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const getByIdGamepads = async (id: number) => {
+  const response = await axiosServices.get(`/gamepads/${id}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const newGamepad = async (body: INewGamepad) => {
+  const response = await axiosServices.post(`/gamepads`, body);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const updateGamepad = async (id: number, body: INewGamepad) => {
+  const response = await axiosServices.patch(`/gamepads/${id}`, body);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const deleteByIdGamepad = async (id: number) => {
+  const response = await axiosServices.delete(`/gamepads/${id}`);
   const result = await response.data;
 
   if ((result.status = 'success')) {

@@ -14,11 +14,16 @@ import {
   getByIdConsole,
   updateConsole,
   deleteConsole,
-  getSerialNumberConsole
+  getSerialNumberConsole,
+  getGamepads,
+  getByIdGamepads,
+  newGamepad,
+  updateGamepad,
+  deleteByIdGamepad
 } from '../endpoints/consoles';
 
 //Interface
-import { INewNameconsoles, INewConsole, INewModel } from '@/interfaces/consoles';
+import { INewNameconsoles, INewConsole, INewModel, INewGamepad } from '@/interfaces/consoles';
 
 export class ConsolesAPI implements ConsolesAPI {
   //CRUD CONSOLES
@@ -84,5 +89,27 @@ export class ConsolesAPI implements ConsolesAPI {
 
   deleteByIdModels = (id: number) => {
     return deleteByIdModels(id);
+  };
+
+  //CRUD GAMEPADS
+
+  getGamepads = () => {
+    return getGamepads();
+  };
+
+  getByIdGamepads = (id: number) => {
+    return getByIdGamepads(id);
+  };
+
+  newGamepad = (body: INewGamepad) => {
+    return newGamepad(body);
+  };
+
+  updateGamepad = (id: number, body: INewGamepad) => {
+    return updateGamepad(id, body);
+  };
+
+  deleteByIdGamepad = (id: number) => {
+    return deleteByIdGamepad(id);
   };
 }
