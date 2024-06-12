@@ -59,3 +59,30 @@ export interface IGamepad {
   connectionType: string;
   videoGameName: { id: number; name: string };
 }
+
+//ACCESSORIES
+export interface INewAccessories {
+  name: string;
+  model: string;
+  color: string;
+  serialNumber: string;
+  characteristics: string;
+  rentalPrice: string;
+  img: string | File;
+}
+
+export interface IAccessories {
+  id: number;
+  name: string;
+  model: string;
+  color: string;
+  serialNumber: string;
+  characteristics: string;
+  rentalPrice: string;
+  imgUrl: string | File;
+  stateId: number;
+  userId: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}

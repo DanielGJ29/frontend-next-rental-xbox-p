@@ -238,3 +238,60 @@ export const deleteByIdGamepad = async (id: number) => {
     return Promise.reject();
   }
 };
+
+//CRUD ACCESORIES
+
+export const getAccessories = async () => {
+  const response = await axiosServices.get(`/accessories`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const getByIdAccessories = async (id: number) => {
+  const response = await axiosServices.get(`/accessories/${id}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const newAccessories = async (body: FormData) => {
+  const response = await axiosServices.post(`/accessories`, body);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const updateAccessories = async (id: number, body: FormData) => {
+  const response = await axiosServices.patch(`/accessories/${id}`, body);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+export const deleteByIdAccessories = async (id: number) => {
+  const response = await axiosServices.delete(`/accessories/${id}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};

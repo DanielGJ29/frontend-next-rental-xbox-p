@@ -19,7 +19,12 @@ import {
   getByIdGamepads,
   newGamepad,
   updateGamepad,
-  deleteByIdGamepad
+  deleteByIdGamepad,
+  getAccessories,
+  getByIdAccessories,
+  newAccessories,
+  updateAccessories,
+  deleteByIdAccessories
 } from '../endpoints/consoles';
 
 //Interface
@@ -111,5 +116,27 @@ export class ConsolesAPI implements ConsolesAPI {
 
   deleteByIdGamepad = (id: number) => {
     return deleteByIdGamepad(id);
+  };
+
+  //CRUD ACCESSORIES
+
+  getAccessories = () => {
+    return getAccessories();
+  };
+
+  getByIdAccessories = (id: number) => {
+    return getByIdAccessories(id);
+  };
+
+  newAccessories = (body: FormData) => {
+    return newAccessories(body);
+  };
+
+  updateAccessories = (id: number, body: FormData) => {
+    return updateAccessories(id, body);
+  };
+
+  deleteByIdAccessories = (id: number) => {
+    return deleteByIdAccessories(id);
   };
 }
