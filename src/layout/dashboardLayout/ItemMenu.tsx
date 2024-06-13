@@ -30,6 +30,7 @@ import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { GiGameConsole } from 'react-icons/gi';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { FaUsers } from 'react-icons/fa';
 
 //Context
 import ConfigContext from '@/context/configContext';
@@ -77,7 +78,8 @@ const ItemMenu = () => {
     DashboardIcon,
     PeopleIcon,
     SettingsSuggestIcon,
-    GiGameConsole
+    GiGameConsole,
+    FaUsers
   };
 
   const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)(({ theme }) => ({
