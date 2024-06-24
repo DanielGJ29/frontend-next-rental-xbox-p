@@ -29,7 +29,7 @@ export interface IConsole {
   hardHDD: string;
   img: string | File;
   videoGameName: { name: string };
-  videoGameModel: { model: string };
+  videoGameModel: { model: string; rentalPrice?: string };
 }
 
 //models consoles

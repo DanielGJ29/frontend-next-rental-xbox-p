@@ -55,3 +55,16 @@ export const deleteByIdClient = async (id: number) => {
     return Promise.reject();
   }
 };
+
+//SEARCH CLIENTE
+
+export const searchClientByKeyword = async (keyword: string) => {
+  const response = await axiosServices.get(`/clients/searchByKeyword/${keyword}`);
+  const result = response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};

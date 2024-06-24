@@ -1,4 +1,4 @@
-import { newClient, getClients, getByIdClients, updateByIdClient, deleteByIdClient } from '../endpoints/clients';
+import { newClient, getClients, getByIdClients, updateByIdClient, deleteByIdClient, searchClientByKeyword } from '../endpoints/clients';
 
 export class ClientAPI implements ClientAPI {
   //CRUD CLIENT
@@ -20,5 +20,11 @@ export class ClientAPI implements ClientAPI {
 
   deleteByIdClient = (id: number) => {
     return deleteByIdClient(id);
+  };
+
+  //SEARCH CLIENT BY KEYWORD(name, lastName, motherlastName, id)
+
+  searchClientByKeyword = (keyword: string) => {
+    return searchClientByKeyword(keyword);
   };
 }

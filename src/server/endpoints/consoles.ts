@@ -295,3 +295,63 @@ export const deleteByIdAccessories = async (id: number) => {
     return Promise.reject();
   }
 };
+
+//SEARCH CONSOLES BY KEYWORD
+export const searchConsoleByKeyword = async (keyword: string) => {
+  const response = await axiosServices.get(`/videoGames/searchByKeyword/${keyword}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+//SEARCH Accessories BY KEYWORD
+export const searchAccessoryByKeyword = async (keyword: string) => {
+  const response = await axiosServices.get(`/accessories/searchByKeyword/${keyword}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+//SEARCH CONSOLES BY SERIAL NUMBER
+export const searchConsoleBySerialNumber = async (serialNumber: string) => {
+  const response = await axiosServices.get(`/videoGames/searchBySerialNumber/${serialNumber}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+//SEARCH GAMEPAD BY SERIAL NUMBER
+export const searchGamepadBySerialNumber = async (serialNumber: string) => {
+  const response = await axiosServices.get(`/gamepads/searchBySerialNumber/${serialNumber}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+//SEARCH GAMEPAD BY KEYWORD
+export const searchGamepadByKeyword = async (keyword: string) => {
+  const response = await axiosServices.get(`/gamepads/searchByKeyword/${keyword}`);
+  const result = await response.data;
+
+  if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};

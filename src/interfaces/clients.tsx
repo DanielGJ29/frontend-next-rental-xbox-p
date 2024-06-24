@@ -6,7 +6,7 @@ export interface IClient {
   email: string;
   userName: string;
   password: string;
-  avatartUrl: string | File;
+  avatarUrl: string;
   role: string;
   city: string;
   colony: string;

@@ -24,7 +24,12 @@ import {
   getByIdAccessories,
   newAccessories,
   updateAccessories,
-  deleteByIdAccessories
+  deleteByIdAccessories,
+  searchConsoleByKeyword,
+  searchAccessoryByKeyword,
+  searchConsoleBySerialNumber,
+  searchGamepadBySerialNumber,
+  searchGamepadByKeyword
 } from '../endpoints/consoles';
 
 //Interface
@@ -138,5 +143,30 @@ export class ConsolesAPI implements ConsolesAPI {
 
   deleteByIdAccessories = (id: number) => {
     return deleteByIdAccessories(id);
+  };
+
+  //SEARCH CONSOLE BY KEYWORD
+  searchConsoleByKeyword = (keyword: string) => {
+    return searchConsoleByKeyword(keyword);
+  };
+
+  //SEARCH ACCESSORY BY KEYWORD
+  searchAccessoryByKeyword = (keyword: string) => {
+    return searchAccessoryByKeyword(keyword);
+  };
+
+  //SEARCH CONSOLE BY SERIAL NUMBER
+  searchConsoleBySerialNumber = (serialNumber: string) => {
+    return searchConsoleBySerialNumber(serialNumber);
+  };
+
+  //SEARCH GAMEPAD BY SERIAL NUMBER
+  searchGamepadBySerialNumber = (serialNumber: string) => {
+    return searchGamepadBySerialNumber(serialNumber);
+  };
+
+  //SEARCH GAMEPAD BY KEYWORD
+  searchGamepadByKeyword = (keyword: string) => {
+    return searchGamepadByKeyword(keyword);
   };
 }
