@@ -106,6 +106,19 @@ const ListConsoles = () => {
   //***********************************************************COLUMNS*****************************************************************
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
+    {
+      field: 'available',
+      headerName: 'Disponibilidad',
+      flex: 1,
+      minWidth: 110,
+      valueGetter: (value, row) => {
+        if (!value) {
+          return 'Rentado';
+        }
+
+        return 'Disponible';
+      }
+    },
     { field: 'videoGameName', headerName: 'Nombre', flex: 1, minWidth: 180, valueGetter: (params: any) => params.name },
     { field: 'videoGameModel', headerName: 'Modelo', flex: 1, minWidth: 180, valueGetter: (params: any) => params.model },
     { field: 'color', headerName: 'Color', flex: 1, minWidth: 100 },

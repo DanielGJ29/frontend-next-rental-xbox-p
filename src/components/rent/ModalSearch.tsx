@@ -3,24 +3,14 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CustomDataGrid from '../shared/CustomDataGrid';
-import {
-  GridColDef,
-  GridRowParams,
-  GridToolbarContainer,
-  GridRowSelectionModel,
-  GridCellParams,
-  MuiEvent,
-  GridCallbackDetails
-} from '@mui/x-data-grid';
+import { GridColDef, GridRowParams, GridToolbarContainer, GridRowSelectionModel } from '@mui/x-data-grid';
 
 //Material Ui
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
@@ -28,10 +18,6 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 //Material Icons
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
-
-//API
-import { clientAPI } from '@/server';
-import { TextField } from '@mui/material';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -68,7 +54,6 @@ const ModalSearch = (props: Props) => {
   };
 
   const handleClickAddRows = () => {
-    console.log('ROWS SELECTED', selectedRows);
     addToCartMultiple(selectedRows, flag);
     handleClose();
   };
@@ -98,6 +83,19 @@ const ModalSearch = (props: Props) => {
   const columnsConsole: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
     {
+      field: 'available',
+      headerName: 'Disponibilidad',
+      flex: 1,
+      minWidth: 110,
+      valueGetter: (value, row) => {
+        if (!value) {
+          return 'Rentado';
+        }
+
+        return 'Disponible';
+      }
+    },
+    {
       field: 'name',
       headerName: 'Nombre',
       flex: 1,
@@ -123,6 +121,19 @@ const ModalSearch = (props: Props) => {
 
   const columnsGamepad: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
+    {
+      field: 'available',
+      headerName: 'Disponibilidad',
+      flex: 1,
+      minWidth: 110,
+      valueGetter: (value, row) => {
+        if (!value) {
+          return 'Rentado';
+        }
+
+        return 'Disponible';
+      }
+    },
     { field: 'videoGameName', headerName: 'Consola', flex: 1, minWidth: 180, valueGetter: (params: any) => params.name },
     { field: 'serialNumber', headerName: 'Numero de serie', flex: 1, minWidth: 180 },
     { field: 'color', headerName: 'Color', flex: 1, minWidth: 130 },
@@ -132,6 +143,19 @@ const ModalSearch = (props: Props) => {
 
   const columnsAccessory: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
+    {
+      field: 'available',
+      headerName: 'Disponibilidad',
+      flex: 1,
+      minWidth: 110,
+      valueGetter: (value, row) => {
+        if (!value) {
+          return 'Rentado';
+        }
+
+        return 'Disponible';
+      }
+    },
     { field: 'name', headerName: 'Nombre', flex: 1, minWidth: 180 },
     { field: 'model', headerName: 'Modelo', flex: 1, minWidth: 150 },
     { field: 'serialNumber', headerName: 'Numero de serie', flex: 1, minWidth: 180 },
@@ -190,25 +214,16 @@ const ModalSearch = (props: Props) => {
             hideFooterPagination
             checkboxSelection
             disableMultipleRowSelection={flag === 'client' ? true : false}
-            // isRowSelectable={(params: GridRowParams) => params.row.availability === 'disponible'}
+            isRowSelectable={(params: GridRowParams) => params.row.available}
             onRowSelectionModelChange={(newRowSelectionModel) => {
               //setRowSelectionModel(newRowSelectionModel);
-              console.log('flag', flag);
               if (flag === 'client') {
-                console.log('selectedRow', newRowSelectionModel);
                 addToCartMultiple(newRowSelectionModel, flag);
                 handleClose();
               } else {
                 setSelectedRows(newRowSelectionModel);
               }
             }}
-            //rowSelectionModel={[4]}
-            // onCellClick={(params: GridCellParams, event: MuiEvent, details: GridCallbackDetails) => {
-            //   console.log('params', params);
-            //   console.log('event', event);
-            //   console.log('details', details);
-            //   handleClose();
-            // }}
           />
         </DialogContent>
         {flag !== 'client' && (

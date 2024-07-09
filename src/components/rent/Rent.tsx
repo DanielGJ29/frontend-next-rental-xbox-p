@@ -3,44 +3,62 @@ import React, { useEffect, useState } from 'react';
 
 //Material Ui
 import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import DirectionsIcon from '@mui/icons-material/Directions';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridToolbarContainer } from '@mui/x-data-grid';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import CircularProgress from '@mui/material/CircularProgress';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
 //Material Icons
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import { Avatar, Button, Icon, Skeleton, Stack, Typography } from '@mui/material';
-import { GiGameConsole } from 'react-icons/gi';
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import KeyboardIcon from '@mui/icons-material/Keyboard';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
+import StartIcon from '@mui/icons-material/Start';
+
+//React icon
+import { TbDatabaseOff } from 'react-icons/tb';
+import { GiGameConsole } from 'react-icons/gi';
+
+//DATE PIKERS
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { es } from 'date-fns/locale/es';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { formatDistance } from 'date-fns/formatDistance';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 
 //API
 import { clientAPI, consolesApi, rentApi } from '@/server';
 
 //Interfaces
 import { IClient } from '@/interfaces/clients';
-import { IConsole } from '@/interfaces/consoles';
-import { IAccessories } from '@/interfaces/accessories';
-import { IAddToCart } from '@/interfaces/rent';
+import { IAddToCart, IDeleteProductFromCart } from '@/interfaces/rent';
 
 //Util
 import convertToUppercase from '@/utils/convertToUppercase';
-import CustomDataGrid from '../shared/CustomDataGrid';
+import { formatCurrency } from '@/utils/utils';
 
 //Alert
 import Swal from 'sweetalert2';
+
+//Component
 import ModalSearch from './ModalSearch';
 import SearchByCode from './SearchByCode';
+import Agreement from './Agreement';
+import Pay from './Pay';
 
 const Rent = () => {
   //***********************************************************USE STATE*****************************************************************
@@ -52,6 +70,8 @@ const Rent = () => {
 
   const [rows, setRows] = useState<any>([]);
   const [rowsSearch, setRowsSearch] = useState<any>([]);
+  const [totales, setTotales] = useState<any>();
+  const [statusCart, setStatusCart] = useState<string>('active');
 
   const [codeClient, setcodeClient] = useState<string>('');
   const [valueClient, setValueClient] = React.useState<IClient>();
@@ -65,6 +85,12 @@ const Rent = () => {
 
   const [flag, setFlag] = useState('');
 
+  const [dateRent, setDateRent] = React.useState<Date | undefined>(new Date());
+  const [dateReturn, setDateReturn] = React.useState<Date | undefined>();
+
+  const [openAgreement, setOpenAgreement] = React.useState<boolean>(false);
+  const [openPay, setOpenPay] = React.useState<boolean>(false);
+
   //***********************************************************USE EFFECT*****************************************************************
 
   useEffect(() => {
@@ -74,46 +100,36 @@ const Rent = () => {
   }, [valueClient]);
 
   useEffect(() => {
-    console.log('FLAG', flag);
-    console.log('valueSearchKeyword', valueSearchKeyword);
     if (valueSearchKeyword) {
       switch (flag) {
         case 'client':
-          console.log('SEARCH BY CLIENTE');
           setLoading(true);
           clientAPI.searchClientByKeyword(valueSearchKeyword).then((response) => {
             setLoading(false);
-            console.log('clientes search', response);
             setRowsSearch(response.data);
           });
           break;
 
         case 'console':
-          console.log('SEARCH BY CONSOLE');
           setLoadingArticle(true);
           consolesApi.searchConsoleByKeyword(valueSearchKeyword).then((response) => {
             setLoadingArticle(false);
-            console.log('console search', response.data);
             setRowsSearch(response.data);
           });
           break;
 
         case 'gamepad':
-          console.log('SEARCH BY CONTROL');
           setLoadingGamepad(true);
           consolesApi.searchGamepadByKeyword(valueSearchKeyword).then((response) => {
             setLoadingGamepad(false);
-            console.log('Gamepad search', response.data);
             setRowsSearch(response.data);
           });
           break;
 
         case 'accessory':
-          console.log('SEARCH BY ACCESSORY');
           setLoadingAccessory(true);
           consolesApi.searchAccessoryByKeyword(valueSearchKeyword).then((response) => {
             setLoadingAccessory(false);
-            console.log('Accessory search', response.data);
             setRowsSearch(response.data);
           });
           break;
@@ -125,14 +141,22 @@ const Rent = () => {
     } else {
       setRowsSearch([]);
     }
-    // if (valueSearchClient) {
-
-    // } else {
-    //   setRowsSearch([]);
-    // }
   }, [valueSearchKeyword]);
 
   //***********************************************************FUNCTIONS*****************************************************************
+
+  const getRentalDays = () => {
+    if (dateReturn && dateRent) {
+      const startDate = dateRent;
+      const endDate = dateReturn;
+      return formatDistance(startDate, endDate, {
+        locale: es,
+        addSuffix: false
+      });
+    }
+
+    return;
+  };
 
   const handleSearchClient = () => {
     if (codeClient) {
@@ -167,7 +191,6 @@ const Rent = () => {
       consolesApi
         .searchConsoleBySerialNumber(codeArticle)
         .then((response) => {
-          console.log('consoles', response.data);
           setcodeArticle('');
 
           addToCart({ productId: { id: response.data.id, articleType: 1 }, clientId: Number(valueClient.id), quantity: 1 });
@@ -176,7 +199,6 @@ const Rent = () => {
         .catch((error) => {
           setcodeArticle('');
           setLoadingArticle(false);
-          console.log(error);
           Swal.fire({
             position: 'center',
             icon: 'error',
@@ -194,7 +216,6 @@ const Rent = () => {
       consolesApi
         .searchGamepadBySerialNumber(codeGamepad)
         .then((response) => {
-          console.log('SEARCH GAMEPADS', response);
           setcodeGamepad('');
           addToCart({ productId: { id: response.data.id, articleType: 2 }, clientId: Number(valueClient.id), quantity: 1 });
         })
@@ -214,22 +235,17 @@ const Rent = () => {
   };
 
   const handleSearchAccessory = () => {
-    console.log(codeAccessory);
     if (codeAccessory && valueClient) {
       setLoadingAccessory(true);
       consolesApi
         .getByIdAccessories(Number(codeAccessory))
         .then((response) => {
           setLoadingAccessory(false);
-          console.log('CURRENT CLIENT ID', valueClient.id);
-          console.log('Accessory SEARCH', response.data);
-
           addToCart({ productId: { id: response.data.id, articleType: 3 }, clientId: Number(valueClient.id), quantity: 1 });
         })
         .catch((error) => {
           setcodeAccessory('');
           setLoadingAccessory(false);
-          console.log(error);
           Swal.fire({
             position: 'center',
             icon: 'error',
@@ -243,7 +259,6 @@ const Rent = () => {
 
   const addToCart = (body: IAddToCart) => {
     rentApi.addToCart(body).then((response) => {
-      console.log('ADDTOCART', response);
       setLoadingArticle(false);
       setLoadingAccessory(false);
       setLoadingGamepad(false);
@@ -254,8 +269,6 @@ const Rent = () => {
   const addToCartMultiple = (arrayId: number[], name: string) => {
     switch (name) {
       case 'client':
-        //const id = arrayId[0];
-        console.log('SET VALUE CLIENT', arrayId[0]);
         if (arrayId.length > 0) {
           setLoading(true);
           const code = Number(arrayId[0]);
@@ -282,7 +295,38 @@ const Rent = () => {
         break;
 
       case 'console':
-        console.log('ADD TO CART MULTIPLE', arrayId);
+        if (valueClient) {
+          setLoadingArticle(true);
+          const body = { productId: { id: arrayId, articleType: 1 }, clientId: Number(valueClient.id), quantity: 1 };
+          rentApi.addToCartMultiple(body).then((response) => {
+            setLoadingArticle(false);
+            getCartClient();
+          });
+        }
+
+        break;
+
+      case 'gamepad':
+        if (valueClient) {
+          setLoadingGamepad(true);
+          const body = { productId: { id: arrayId, articleType: 2 }, clientId: Number(valueClient.id), quantity: 1 };
+          rentApi.addToCartMultiple(body).then((response) => {
+            setLoadingGamepad(false);
+            getCartClient();
+          });
+        }
+
+        break;
+
+      case 'accessory':
+        if (valueClient) {
+          setLoadingAccessory(true);
+          const body = { productId: { id: arrayId, articleType: 3 }, clientId: Number(valueClient.id), quantity: 1 };
+          rentApi.addToCartMultiple(body).then((response) => {
+            setLoadingAccessory(false);
+            getCartClient();
+          });
+        }
 
         break;
 
@@ -297,8 +341,6 @@ const Rent = () => {
         .getClientCart(valueClient.id)
         .then((response) => {
           if (response.data) {
-            console.log('GET CART', response.data);
-
             const consoles = response.data.products.videoGames;
             const gamepads = response.data.products.gamepads;
             const accessories = response.data.products.accessories;
@@ -309,7 +351,7 @@ const Rent = () => {
               consoles.map((item: any) => {
                 // console.log(item);
                 const newConsoles = {
-                  id: item.id + 'c',
+                  id: item.id + '-' + 'C',
                   article: 'consola',
                   name: item.name,
                   model: item.model,
@@ -324,7 +366,7 @@ const Rent = () => {
             if (gamepads.length > 0) {
               gamepads.map((item: any) => {
                 const newGamePad = {
-                  id: item.id + 'g',
+                  id: item.id + '-' + 'G',
                   article: 'control',
                   name: item.name,
                   model: 'n/a',
@@ -334,25 +376,27 @@ const Rent = () => {
                 };
                 newRows.push(newGamePad);
               });
-
-              if (accessories.length > 0) {
-                accessories.map((item: any) => {
-                  console.log(item);
-                  const newAccessory = {
-                    id: item.id + 'a',
-                    article: 'accesorio',
-                    name: item.name,
-                    model: item.name,
-                    serialNumber: item.serialNumber,
-                    rentalPrice: 50,
-                    characteristics: item.color + ' ' + item.characteristics
-                  };
-                  newRows.push(newAccessory);
-                });
-              }
             }
 
+            if (accessories.length > 0) {
+              accessories.map((item: any) => {
+                const newAccessory = {
+                  id: item.id + '-' + 'A',
+                  article: 'accesorio',
+                  name: item.name,
+                  model: item.name,
+                  serialNumber: item.serialNumber,
+                  rentalPrice: item.rentalPrice,
+                  characteristics: item.color + ' ' + item.characteristics
+                };
+                newRows.push(newAccessory);
+              });
+            }
             setRows(newRows);
+            setTotales(response.data.totales);
+            setStatusCart(response.data.cart.status);
+          } else {
+            setRows([]);
           }
         })
         .then((error) => {
@@ -363,25 +407,65 @@ const Rent = () => {
 
   const handleSearchByKeyboard = (name: string) => {
     setOpenModalSearch(true);
-    console.log(`MODAL ${name}`);
     setFlag(name);
   };
 
-  //***********************************************************COLUMNS*****************************************************************
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
-    { field: 'article', headerName: 'Articulo', flex: 1, minWidth: 130 },
-    { field: 'name', headerName: 'Nombre', flex: 1, minWidth: 150 },
-    { field: 'model', headerName: 'Modelo', flex: 1, minWidth: 130 },
-    { field: 'serialNumber', headerName: 'No. de serie', flex: 1, minWidth: 130 },
-    { field: 'characteristics', headerName: 'Caracteristicas', flex: 1, minWidth: 280 },
-    { field: 'rentalPrice', headerName: 'Precio', flex: 1, minWidth: 70 }
+  const handleSeeClick = (id: number) => {
+    console.log('see', id);
+  };
 
-    //  { field: 'status', headerName: 'Estatus', flex: 1, minWidth: 100 }
-  ];
+  const handleDeleteClick = (row: any) => {
+    Swal.fire({
+      title: '¿Esta segur@?',
+
+      html: `
+        <div style={} >Eliminar ${row.article}: </br>
+        ID: <b>${row.id}</b> </br>
+        Nombre: <b>${row.name}</b></br>
+        Modelo: <b>${row.model}</b> </br>
+        Serie: <b>${row.serialNumber}</b> </br>
+        Precio de renta: <b>${row.rentalPrice}</b> </br>
+        </div>
+        
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, ¡Eliminar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed && valueClient) {
+        setLoadingArticle(true);
+        const article = row.article === 'consola' ? 1 : row.article === 'control' ? 2 : row.article === 'accesorio' && 3;
+        const body: IDeleteProductFromCart = {
+          productId: Number(row.id.split('-')[0]),
+          clientId: Number(valueClient.id),
+          articleType: Number(article)
+        };
+        rentApi.deleteProductTocart(body).then((response) => {
+          setLoadingArticle(false);
+
+          if (response.status === 'success') {
+            getCartClient();
+            Swal.fire({
+              title: '¡Eliminado!',
+              text: 'Articulo eliminado correctamente.',
+              icon: 'success'
+            });
+          } else {
+            Swal.fire({
+              title: '¡Ocurrio un error!',
+              icon: 'error'
+            });
+          }
+        });
+      }
+    });
+  };
 
   return (
-    <Grid sx={{ p: 3 }} container spacing={9}>
+    <Grid sx={{ p: 0 }} container rowSpacing={4} columnSpacing={8}>
       <Grid item xs={12} md={4}>
         <Stack direction="column" rowGap={6}>
           {/* /**********SEARCH CLIENT ******/}
@@ -404,7 +488,7 @@ const Rent = () => {
             setValueInput={setcodeArticle}
             handleSearch={handleSearchArticle}
             handleSearchByKeyboard={handleSearchByKeyboard}
-            disabled={valueClient ? false : true}
+            disabled={valueClient && statusCart === 'active' ? false : true}
           />
 
           {/* /********SEARCH GAMEPADS ******/}
@@ -416,7 +500,7 @@ const Rent = () => {
             setValueInput={setcodeGamepad}
             handleSearch={handleSearchGamePad}
             handleSearchByKeyboard={handleSearchByKeyboard}
-            disabled={valueClient ? false : true}
+            disabled={valueClient && statusCart === 'active' ? false : true}
           />
 
           {/* /************SEARCH ACCESSORIES *************/}
@@ -428,33 +512,63 @@ const Rent = () => {
             setValueInput={setcodeAccessory}
             handleSearch={handleSearchAccessory}
             handleSearchByKeyboard={handleSearchByKeyboard}
-            disabled={valueClient ? false : true}
+            disabled={valueClient && statusCart === 'active' ? false : true}
           />
 
           {/* /*********************DATES ******************/}
-          <Paper component="div" sx={{ p: '4px 20px', display: 'flex', alignItems: 'center' }}>
-            <Icon aria-label="menu" color="action">
-              <PersonSearchIcon />
-            </Icon>
+          {/* <Paper> */}
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+            <DateTimePicker
+              sx={{ bgcolor: 'white', border: 'none' }}
+              label="Fecha de renta"
+              value={dateRent}
+              format="dd/MM/yyyy hh:mm a"
+              viewRenderers={{
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+                seconds: renderTimeViewClock
+              }}
+              ampm
+              minDate={new Date()}
+              onChange={(newValue) => {
+                if (newValue) {
+                  setDateRent(newValue);
+                }
+              }}
+              closeOnSelect={true}
+              disabled={valueClient && statusCart === 'active' ? false : true}
+            />
+          </LocalizationProvider>
+          {/* </Paper> */}
 
-            <Icon aria-label="search" color="action">
-              <SearchIcon />
-            </Icon>
-          </Paper>
-
-          <Paper component="div" sx={{ p: '4px 20px', display: 'flex', alignItems: 'center' }}>
-            <Icon aria-label="menu" color="action">
-              <PersonSearchIcon />
-            </Icon>
-
-            <Icon aria-label="search" color="action">
-              <SearchIcon />
-            </Icon>
-          </Paper>
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+            {/* <DemoContainer components={['DateTimePicker', 'DateTimePicker']}> */}
+            <DateTimePicker
+              sx={{ bgcolor: 'white', border: 'none' }}
+              label="Fecha devolución"
+              value={dateReturn}
+              //views={['day', 'month', 'year', 'hours', 'minutes']}
+              format="dd/MM/yyyy hh:mm a"
+              viewRenderers={{
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+                seconds: renderTimeViewClock
+              }}
+              ampm
+              minDate={dateRent}
+              onChange={(newValue) => {
+                if (newValue) {
+                  setDateReturn(newValue);
+                }
+              }}
+              disabled={valueClient && statusCart === 'active' ? false : true}
+            />
+            {/* </DemoContainer> */}
+          </LocalizationProvider>
         </Stack>
       </Grid>
 
-      <Grid item container columnSpacing={3} xs={12} md={8}>
+      <Grid item container columnSpacing={3} xs={12} md={8} rowSpacing={4}>
         <Grid item xs={12} md={11}>
           <Paper sx={{ p: 3 }}>
             {!loading ? (
@@ -597,39 +711,196 @@ const Rent = () => {
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Paper sx={{ px: 2, py: 2, mt: 2 }}>
-            <CustomDataGrid
-              sx={{
-                //boxShadow: 2,
-                border: 0,
-                //borderColor: 'primary.light',
-                '--DataGrid-overlayHeight': '200px'
+          <TableContainer component={Paper} sx={{ px: 2, py: 2 }}>
+            <Table sx={{ minWidth: 900 }} size="small" aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  {/* <TableCell align="left" >
+                    ID
+                  </TableCell> */}
+                  <TableCell align="left">Articulo</TableCell>
+                  <TableCell align="left">Nombre</TableCell>
+                  <TableCell align="left">Modelo</TableCell>
+                  <TableCell align="left">No. de Serie</TableCell>
+                  {/* <TableCell align="left">Caracteristicas</TableCell> */}
+                  <TableCell align="right">Precio</TableCell>
+                  <TableCell align="center">Acciones</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.length > 0 ? (
+                  <React.Fragment>
+                    {rows.map((row: any) => (
+                      <TableRow key={Math.random()}>
+                        {/* <TableCell component="th" scope="row" style={{ minWidth: 60 }}>
+                      {row.id}
+                    </TableCell> */}
+                        <TableCell style={{ minWidth: 100, textTransform: 'capitalize' }} align="left">
+                          {row.article}
+                        </TableCell>
+                        <TableCell style={{ minWidth: 160, textTransform: 'capitalize' }} align="left">
+                          {row.name}
+                        </TableCell>
+                        <TableCell style={{ minWidth: 160, textTransform: 'capitalize' }} align="left">
+                          {row.model}
+                        </TableCell>
+                        <TableCell style={{ minWidth: 160, textTransform: 'uppercase' }} align="left">
+                          {row.serialNumber}
+                        </TableCell>
+                        {/* <TableCell style={{ minWidth: 260, textTransform: 'capitalize' }} align="left">
+                      {row.characteristics}
+                    </TableCell> */}
+                        <TableCell align="right">{formatCurrency(row.rentalPrice)}</TableCell>
+                        <TableCell align="center" sx={{ p: 0, m: 0 }}>
+                          <Stack flexDirection={'row'} justifyContent={'center'} rowGap={2} sx={{ m: 0, p: 0 }}>
+                            <IconButton
+                              size="small"
+                              color="success"
+                              disabled={statusCart === 'active' ? false : true}
+                              onClick={() => handleSeeClick(row.id as number)}
+                            >
+                              <VisibilityIcon fontSize="inherit" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              disabled={statusCart === 'active' ? false : true}
+                              onClick={() => handleDeleteClick(row)}
+                            >
+                              <DeleteIcon fontSize="inherit" />
+                            </IconButton>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {totales ? (
+                      <React.Fragment>
+                        <TableRow key={Math.random()}>
+                          {/* <TableCell rowSpan={3} sx={{ borderBottom: 'none' }} /> */}
+                          {/* <TableCell rowSpan={4} sx={{ borderBottom: 'none' }} /> */}
+                          <TableCell rowSpan={4} sx={{ borderBottom: 'none' }} />
+                          <TableCell rowSpan={4} sx={{ borderBottom: 'none' }} />
+                          <TableCell rowSpan={4} sx={{ borderBottom: 'none' }} />
+
+                          <TableCell
+                            sx={{
+                              fontWeight: 'bold',
+                              borderBottom: 'none'
+                            }}
+                          >
+                            Sub Total
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontWeight: 'bold',
+                              borderBottom: 'none'
+                            }}
+                            align="right"
+                          >
+                            {formatCurrency(totales?.subtotal)}
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell sx={{ fontWeight: 'bold', borderBottom: 'none' }}>Descuento</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', borderBottom: 'none' }} align="right">
+                            {formatCurrency(totales?.descuento)}
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Control</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }} align="right">
+                            {formatCurrency(-totales?.control)}
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell sx={{ fontWeight: 'bold', borderBottom: 'none' }}>Total</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', borderBottom: 'none' }} align="right">
+                            {formatCurrency(totales?.total)}
+                          </TableCell>
+                        </TableRow>
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>
+                        <TableRow>
+                          <TableCell></TableCell>
+                        </TableRow>
+                      </React.Fragment>
+                    )}
+                  </React.Fragment>
+                ) : (
+                  <TableRow>
+                    {/* <TableCell rowSpan={4} sx={{ borderBottom: 'none' }} /> */}
+
+                    <TableCell colSpan={6}>
+                      <Stack justifyContent={'center'} alignItems={'center'} sx={{ minHeight: 200 }}>
+                        <TbDatabaseOff fontSize={'50'} color="action" />
+                        <Typography variant="body1" color="action">
+                          No hay datos
+                        </Typography>{' '}
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+
+        <Grid item container xs={12} md={12} rowSpacing={2} alignItems={'center'}>
+          <Grid xs={12} md={10}>
+            <Stack flexDirection={'row'} columnGap={2}>
+              <Card sx={{ maxWidth: 200 }}>
+                <CardContent>
+                  <Typography gutterBottom variant="button" component="div">
+                    Dias de renta
+                  </Typography>
+                  <Typography variant="h5" textAlign={'center'} color="text.secondary">
+                    {getRentalDays()}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card sx={{ maxWidth: 200 }}>
+                <CardContent>
+                  <Typography gutterBottom variant="button" component="div">
+                    Garantia
+                  </Typography>
+                  <Typography variant="h5" textAlign={'center'} color="text.secondary">
+                    {formatCurrency(0)}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card sx={{ maxWidth: 200 }}>
+                <CardContent>
+                  <Typography gutterBottom variant="button" component="div">
+                    Total a pagar
+                  </Typography>
+                  <Typography variant="h5" textAlign={'center'} color="text.secondary">
+                    {formatCurrency(totales ? totales.total : 0)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Stack>
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<StartIcon />}
+              onClick={() => {
+                if (rows.length > 0 && dateReturn) {
+                  setOpenAgreement(true);
+                } else {
+                  setOpenAgreement(false);
+                }
               }}
-              name="rent"
-              columns={columns}
-              rows={rows}
-              loading={loadingArticle || loadingAccessory || loadingGamepad}
-              // slotProps={{
-              //   toolbar: {
-              //     showQuickFilter: false
-              //   }
-              // }}
-              // slotProps={{
-              //   toolbar: {
-              //     printOptions: { disableToolbarButton: false },
-              //     csvOptions: { disableToolbarButton: false },
-              //     showQuickFilter: false
-              //   }
-              // }}
-              slots={{ toolbar: () => <GridToolbarContainer sx={{ mb: 2 }}></GridToolbarContainer> }}
-              hideFooterPagination
-              // disableColumnFilter
-              // disableColumnSelector
-              // disableDensitySelector
-            />
-          </Paper>
+              disabled={valueClient && statusCart === 'active' ? false : true}
+            >
+              Continuar
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
+
       <ModalSearch
         open={openModalSearch}
         setOpen={setOpenModalSearch}
@@ -640,6 +911,23 @@ const Rent = () => {
         loading={loading || loadingAccessory || loadingArticle || loadingGamepad}
         addToCartMultiple={addToCartMultiple}
       />
+
+      {rows.length > 0 && valueClient && dateReturn && (
+        <Agreement
+          open={openAgreement}
+          setOpen={setOpenAgreement}
+          setOpenPay={setOpenPay}
+          cart={{ client: valueClient, products: rows, dataReturn: dateReturn }}
+        />
+      )}
+
+      {rows.length > 0 && valueClient && dateReturn && (
+        <Pay
+          open={openPay}
+          setOpen={setOpenPay}
+          cart={{ client: valueClient, products: rows, startDate: dateRent, dataReturn: dateReturn, totales: totales }}
+        />
+      )}
     </Grid>
   );
 };

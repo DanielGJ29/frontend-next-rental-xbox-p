@@ -105,6 +105,19 @@ const ListControles = () => {
   //***********************************************************COLUMNS*****************************************************************
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
+    {
+      field: 'available',
+      headerName: 'Disponibilidad',
+      flex: 1,
+      minWidth: 110,
+      valueGetter: (value, row) => {
+        if (!value) {
+          return 'Rentado';
+        }
+
+        return 'Disponible';
+      }
+    },
     { field: 'videoGameName', headerName: 'Consola', flex: 1, minWidth: 180, valueGetter: (params: any) => params.name },
     { field: 'serialNumber', headerName: 'Numero de serie', flex: 1, minWidth: 180 },
     { field: 'color', headerName: 'Color', flex: 1, minWidth: 180 },

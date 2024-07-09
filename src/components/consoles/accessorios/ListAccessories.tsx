@@ -105,13 +105,27 @@ const ListAccessories = () => {
   //***********************************************************COLUMNS*****************************************************************
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
+    {
+      field: 'available',
+      headerName: 'Disponibilidad',
+      flex: 1,
+      minWidth: 110,
+      valueGetter: (value, row) => {
+        if (!value) {
+          return 'Rentado';
+        }
+
+        return 'Disponible';
+      }
+    },
     { field: 'name', headerName: 'Nombre', flex: 1, minWidth: 180 },
     { field: 'model', headerName: 'Modelo', flex: 1, minWidth: 180 },
     { field: 'serialNumber', headerName: 'Numero de serie', flex: 1, minWidth: 180 },
     { field: 'color', headerName: 'Color', flex: 1, minWidth: 180 },
-    { field: 'rentalPrice', headerName: 'Precio de renta', flex: 1, minWidth: 180 },
-    { field: 'characteristics', headerName: 'Caracteristicas', flex: 1, minWidth: 180 },
+
+    { field: 'characteristics', headerName: 'Caracteristicas', flex: 1, minWidth: 280 },
     { field: 'status', headerName: 'Estatus', flex: 1, minWidth: 100 },
+
     {
       field: 'createdAt',
       headerName: 'Fecha de creación',
@@ -139,6 +153,7 @@ const ListAccessories = () => {
         return formatDate(value);
       }
     },
+    { field: 'rentalPrice', headerName: 'Precio', flex: 1, minWidth: 50 },
 
     {
       field: 'actions',
