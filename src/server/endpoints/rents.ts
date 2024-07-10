@@ -58,11 +58,26 @@ export const deleteProductTocart = async (body: IDeleteProductFromCart) => {
   }
 };
 
+//New Rented
 export const rented = async (body: IRented) => {
   const response = await axiosServices.post('/carts/rented', body);
   const result = await response.data;
 
   if ((result.status = 'success')) {
+    return Promise.resolve(result);
+  } else {
+    return Promise.reject();
+  }
+};
+
+//ITEMS RETURN  RENTED
+export const itemReturns = async (id: number) => {
+  const response = await axiosServices.get(`/carts/returnArticle/${id}`);
+  const result = await response.data;
+
+  return result;
+  console.log('response axios', response);
+  if (result.status === 'success') {
     return Promise.resolve(result);
   } else {
     return Promise.reject();

@@ -1,4 +1,4 @@
-import { addToCart, getClientCart, addToCartMultiple, deleteProductTocart, rented } from '../endpoints/rents';
+import { addToCart, getClientCart, addToCartMultiple, deleteProductTocart, rented, itemReturns } from '../endpoints/rents';
 
 //INTERFACES
 import { IAddToCart, IAddToCartMultiple, IDeleteProductFromCart, IRented } from '../../interfaces/rent';
@@ -22,5 +22,9 @@ export class RentAPI implements RentAPI {
 
   rented = (body: IRented) => {
     return rented(body);
+  };
+
+  itemReturns = (id: number) => {
+    return itemReturns(id);
   };
 }

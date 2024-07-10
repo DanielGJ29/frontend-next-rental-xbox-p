@@ -16,6 +16,7 @@ export interface IClient {
   numberOut: string;
   phone: string;
   socialNetworkId: string;
+  linkSocialNetwork: string;
   state: string;
   status: string;
   street: string;

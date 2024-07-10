@@ -29,7 +29,7 @@ interface Props {
   loading: boolean;
   addToCartMultiple: Function;
 }
-const ModalSearch = (props: Props) => {
+const ModalSearchByKeyword = (props: Props) => {
   const { open, setOpen, setValueSearch, valueSearch, rowsGrid, flag, loading, addToCartMultiple } = props;
 
   //***********************************************************USE STATE*****************************************************************
@@ -241,4 +241,4 @@ const ModalSearch = (props: Props) => {
   );
 };
 
-export default ModalSearch;
+export default ModalSearchByKeyword;
