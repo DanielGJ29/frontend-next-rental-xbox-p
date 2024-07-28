@@ -38,10 +38,11 @@ interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
   cart: any;
+  clean: any;
 }
 
 const Pay = (props: Props) => {
-  const { open, setOpen, cart } = props;
+  const { open, setOpen, cart, clean } = props;
 
   //***********************************************************USE STATE*****************************************************************
 
@@ -72,8 +73,10 @@ const Pay = (props: Props) => {
         handleClose();
         setPay('');
         setChange(0);
+        clean();
       })
       .catch((error) => {
+        setLoading(false);
         console.log('error', error);
       });
   };
@@ -173,7 +176,7 @@ const Pay = (props: Props) => {
         </Button>
         <Button
           onClick={handleClickCharge}
-          disabled={pay && pay > cart.totales.total ? false : true}
+          disabled={pay && pay >= cart.totales.total ? false : true}
           color="primary"
           variant="contained"
           startIcon={<PointOfSaleIcon />}

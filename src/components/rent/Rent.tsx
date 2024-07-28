@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 //Material Ui
 import Paper from '@mui/material/Paper';
@@ -19,6 +20,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Alert from '@mui/material/Alert';
 
 //Material Icons
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
@@ -27,9 +29,9 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StartIcon from '@mui/icons-material/Start';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
 
 //React icon
-import { TbDatabaseOff } from 'react-icons/tb';
 import { GiGameConsole } from 'react-icons/gi';
 
 //DATE PIKERS
@@ -91,6 +93,8 @@ const Rent = () => {
   const [openAgreement, setOpenAgreement] = React.useState<boolean>(false);
   const [openPay, setOpenPay] = React.useState<boolean>(false);
 
+  const [alertDate, setAlertDate] = React.useState<boolean>(false);
+
   //***********************************************************USE EFFECT*****************************************************************
 
   useEffect(() => {
@@ -104,6 +108,7 @@ const Rent = () => {
       switch (flag) {
         case 'client':
           setLoading(true);
+          setAlertDate(false);
           clientAPI.searchClientByKeyword(valueSearchKeyword).then((response) => {
             setLoading(false);
             setRowsSearch(response.data);
@@ -161,18 +166,26 @@ const Rent = () => {
   const handleSearchClient = () => {
     if (codeClient) {
       setLoading(true);
+      setTotales(0);
+      setAlertDate(false);
       const code = Number(codeClient);
       clientAPI
         .getByIdClients(code)
         .then((response) => {
           setLoading(false);
+
+          setDateReturn(undefined);
           setcodeClient('');
           setValueClient(response.data);
         })
         .catch((error) => {
           setLoading(false);
+          setAlertDate(false);
+          setDateReturn(undefined);
           setcodeClient('');
           setValueClient(undefined);
+          setRows([]);
+          setTotales(undefined);
           console.log('error', error.response);
           Swal.fire({
             position: 'center',
@@ -349,7 +362,6 @@ const Rent = () => {
 
             if (consoles.length > 0) {
               consoles.map((item: any) => {
-                // console.log(item);
                 const newConsoles = {
                   id: item.id + '-' + 'C',
                   article: 'consola',
@@ -397,6 +409,7 @@ const Rent = () => {
             setStatusCart(response.data.cart.status);
           } else {
             setRows([]);
+            setStatusCart('active');
           }
         })
         .then((error) => {
@@ -464,6 +477,38 @@ const Rent = () => {
     });
   };
 
+  const clean = () => {
+    setRows([]);
+    setRowsSearch([]);
+    setTotales(undefined);
+    setValueSearchKeyword('');
+    setFlag('');
+    setDateRent(new Date());
+    setDateReturn(undefined);
+    setOpenPay(false);
+    setValueClient(undefined);
+  };
+
+  const alertRented = () => {
+    Swal.fire({
+      icon: 'info',
+      title: `El cliente tiene una renta activa`,
+      // text: '',
+      // html: '<Buttton>Ir a dev</Button>',
+      // footer: '<a href="#">Ir a devoluciones</a>'
+      // showDenyButton: true,
+      confirmButtonText: ` Ir a devoluciones&nbsp;<i class="fa fa-arrow-right"></i> `,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar'
+      //  confirmButtonText: 'Ir a devoluciones',
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        Swal.fire('Saved!', '', 'success');
+      }
+    });
+  };
+
   return (
     <Grid sx={{ p: 0 }} container rowSpacing={4} columnSpacing={8}>
       <Grid item xs={12} md={4}>
@@ -516,55 +561,67 @@ const Rent = () => {
           />
 
           {/* /*********************DATES ******************/}
-          {/* <Paper> */}
-          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-            <DateTimePicker
-              sx={{ bgcolor: 'white', border: 'none' }}
-              label="Fecha de renta"
-              value={dateRent}
-              format="dd/MM/yyyy hh:mm a"
-              viewRenderers={{
-                hours: renderTimeViewClock,
-                minutes: renderTimeViewClock,
-                seconds: renderTimeViewClock
-              }}
-              ampm
-              minDate={new Date()}
-              onChange={(newValue) => {
-                if (newValue) {
-                  setDateRent(newValue);
-                }
-              }}
-              closeOnSelect={true}
-              disabled={valueClient && statusCart === 'active' ? false : true}
-            />
-          </LocalizationProvider>
-          {/* </Paper> */}
+          <Paper>
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+              <DateTimePicker
+                sx={{ width: 1 }}
+                //slotProps={{ textField: { variant: 'standard' } }}
+                // slotProps={{
+                //   textField: ({ position }) => ({
+                //     color: 'primary',
+                //     focused: false
+                //   })
+                // }}
+                // slotProps={{ textField: { variant: 'filled', focused: false, color: 'primary' } }}
+                label="Fecha de renta"
+                value={dateRent}
+                format="dd/MM/yyyy hh:mm a"
+                viewRenderers={{
+                  hours: renderTimeViewClock,
+                  minutes: renderTimeViewClock,
+                  seconds: renderTimeViewClock
+                }}
+                ampm
+                minDate={new Date()}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    setDateRent(newValue);
+                  }
+                }}
+                closeOnSelect={true}
+                disabled={valueClient && statusCart === 'active' ? false : true}
+              />
+            </LocalizationProvider>
+          </Paper>
 
-          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-            {/* <DemoContainer components={['DateTimePicker', 'DateTimePicker']}> */}
-            <DateTimePicker
-              sx={{ bgcolor: 'white', border: 'none' }}
-              label="Fecha devolución"
-              value={dateReturn}
-              //views={['day', 'month', 'year', 'hours', 'minutes']}
-              format="dd/MM/yyyy hh:mm a"
-              viewRenderers={{
-                hours: renderTimeViewClock,
-                minutes: renderTimeViewClock,
-                seconds: renderTimeViewClock
-              }}
-              ampm
-              minDate={dateRent}
-              onChange={(newValue) => {
-                if (newValue) {
-                  setDateReturn(newValue);
-                }
-              }}
-              disabled={valueClient && statusCart === 'active' ? false : true}
-            />
-            {/* </DemoContainer> */}
-          </LocalizationProvider>
+          <Paper>
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+              <DateTimePicker
+                sx={{ width: 1, bgcolor: 'transparent' }}
+                // slotProps={{ textField: { variant: 'filled' } }}
+                label="Fecha devolución"
+                defaultValue={dateRent}
+                value={dateReturn}
+                disablePast={!alertDate ? false : true}
+                //views={['day', 'month', 'year', 'hours', 'minutes']}
+                format="dd/MM/yyyy hh:mm a"
+                viewRenderers={{
+                  hours: renderTimeViewClock,
+                  minutes: renderTimeViewClock,
+                  seconds: renderTimeViewClock
+                }}
+                ampm
+                minDate={dateRent}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    setDateReturn(newValue);
+                    setAlertDate(false);
+                  }
+                }}
+                disabled={valueClient && statusCart === 'active' ? false : true}
+              />
+            </LocalizationProvider>
+          </Paper>
         </Stack>
       </Grid>
 
@@ -801,17 +858,17 @@ const Rent = () => {
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell sx={{ fontWeight: 'bold', borderBottom: 'none' }}>Descuento</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold', borderBottom: 'none' }} align="right">
+                          <TableCell sx={{ fontWeight: 'bold' }}>Descuento</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }} align="right">
                             {formatCurrency(totales?.descuento)}
                           </TableCell>
                         </TableRow>
-                        <TableRow>
+                        {/* <TableRow>
                           <TableCell sx={{ fontWeight: 'bold' }}>Control</TableCell>
                           <TableCell sx={{ fontWeight: 'bold' }} align="right">
                             {formatCurrency(-totales?.control)}
                           </TableCell>
-                        </TableRow>
+                        </TableRow> */}
                         <TableRow>
                           <TableCell sx={{ fontWeight: 'bold', borderBottom: 'none' }}>Total</TableCell>
                           <TableCell sx={{ fontWeight: 'bold', borderBottom: 'none' }} align="right">
@@ -833,10 +890,10 @@ const Rent = () => {
 
                     <TableCell colSpan={6}>
                       <Stack justifyContent={'center'} alignItems={'center'} sx={{ minHeight: 200 }}>
-                        <TbDatabaseOff fontSize={'50'} color="action" />
+                        <AllInboxIcon fontSize="large" color="action" />
                         <Typography variant="body1" color="action">
                           No hay datos
-                        </Typography>{' '}
+                        </Typography>
                       </Stack>
                     </TableCell>
                   </TableRow>
@@ -862,7 +919,7 @@ const Rent = () => {
               <Card sx={{ maxWidth: 200 }}>
                 <CardContent>
                   <Typography gutterBottom variant="button" component="div">
-                    Garantia
+                    Descuento
                   </Typography>
                   <Typography variant="h5" textAlign={'center'} color="text.secondary">
                     {formatCurrency(0)}
@@ -891,14 +948,31 @@ const Rent = () => {
                   setOpenAgreement(true);
                 } else {
                   setOpenAgreement(false);
+                  setAlertDate(true);
                 }
               }}
-              disabled={valueClient && statusCart === 'active' ? false : true}
+              disabled={valueClient && statusCart === 'active' && rows.length > 0 ? false : true}
             >
               Continuar
             </Button>
           </Grid>
         </Grid>
+
+        {alertDate && (
+          <Grid item xs={12}>
+            <Alert variant="filled" severity="error">
+              Debe seleccionar fecha de devolución.
+            </Alert>
+          </Grid>
+        )}
+
+        {statusCart === 'rented' && valueClient && (
+          <Grid item xs={12}>
+            <Alert severity="info">
+              Cliente cuenta con una renta activa. <Link href={`/devoluciones/${valueClient.id}`}> Ir a Devoluciones</Link>
+            </Alert>
+          </Grid>
+        )}
       </Grid>
 
       <ModalSearch
@@ -926,6 +1000,7 @@ const Rent = () => {
           open={openPay}
           setOpen={setOpenPay}
           cart={{ client: valueClient, products: rows, startDate: dateRent, dataReturn: dateReturn, totales: totales }}
+          clean={clean}
         />
       )}
     </Grid>

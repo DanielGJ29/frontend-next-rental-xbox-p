@@ -115,7 +115,7 @@ const CustomDataGrid = (props: Props) => {
         //borderColor: 'primary.light',
         '--DataGrid-overlayHeight': '200px',
         '& .MuiDataGrid-columnHeader': {
-          backgroundColor: 'rgb(240, 240, 240)'
+          //backgroundColor: 'rgb(240, 240, 240)'
         },
         '& .MuiDataGrid-columnsContainer': {
           backgroundColor: 'rgb(240, 240, 240)'

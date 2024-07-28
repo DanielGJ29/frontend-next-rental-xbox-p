@@ -17,8 +17,8 @@ const Loading = (props: Props) => {
   //   setOpen(true);
   // };
   return (
-    <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 2000 }} open={open}>
-      <CircularProgress color="inherit" />
+    <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
+      <CircularProgress color="primary" />
     </Backdrop>
   );
 };

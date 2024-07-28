@@ -10,33 +10,21 @@ import { esES } from '@mui/x-date-pickers/locales';
 //UseContext
 import { ConfigProvider } from '@/context/configContext';
 
-// const theme = createTheme({
-//   palette: {
-//     //mode: 'dark'
-//     mode: 'light'
-//   }
-// });
-
-const theme = createTheme(
-  {
-    palette: {
-      // primary: { main: '#1976d2' },
-    }
-  },
-  esES,
-  coreEsES
-);
-
 // next
 import { SessionProvider } from 'next-auth/react';
+import ThemeCustomization from '@/themes';
 
 export default function ProviderWrapper({ children }: { children: React.ReactNode }) {
+  //const theme = useTheme();
+
   return (
     <ConfigProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline enableColorScheme />
+      <ThemeCustomization>
+        {/* <ThemeProvider theme={theme}> */}
+        {/* <CssBaseline enableColorScheme /> */}
         <SessionProvider refetchInterval={0}>{children}</SessionProvider>
-      </ThemeProvider>
+        {/* </ThemeProvider> */}
+      </ThemeCustomization>
     </ConfigProvider>
   );
 }

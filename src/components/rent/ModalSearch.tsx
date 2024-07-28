@@ -185,7 +185,7 @@ const ModalSearch = (props: Props) => {
               sx={{ ml: 1, flex: 1 }}
               placeholder={'Buscar'}
               autoFocus
-              inputProps={{ 'aria-label': 'search google maps' }}
+              // inputProps={{ 'aria-label': 'search google maps' }}
               //   value={value}
               // disabled={disabled}
               onChange={(e) => setValueSearch(e.target.value)}

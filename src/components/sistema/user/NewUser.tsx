@@ -31,14 +31,8 @@ import { useTheme } from '@mui/material/styles';
 
 //Material Icon
 import SaveIcon from '@mui/icons-material/Save';
-import PhotoIcon from '@mui/icons-material/Photo';
-import { CameraOutlined } from '@mui/icons-material';
 import LocalSeeIcon from '@mui/icons-material/LocalSee';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import EditIcon from '@mui/icons-material/Edit';
-
-import thumb from '@/assets/img/logocyberplay.png';
-import { GridRowId } from '@mui/x-data-grid';
 
 //api
 import { sistemaAPI } from '@/server';

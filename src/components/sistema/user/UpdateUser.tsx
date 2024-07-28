@@ -419,6 +419,7 @@ export const UpdateUser = (props: Props) => {
                         // }
                       }}
                       size="small"
+                      name="email"
                       id="outlined-basic"
                       defaultValue={formData?.email}
                       variant="outlined"

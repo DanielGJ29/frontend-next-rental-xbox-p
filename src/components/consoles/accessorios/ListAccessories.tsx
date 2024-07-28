@@ -48,10 +48,9 @@ const ListAccessories = () => {
   const getListAccessories = () => {
     setLoading(true);
     consolesApi.getAccessories().then((response) => {
+      setLoading(false);
       setRows(response.data);
     });
-
-    setLoading(false);
   };
 
   const handleNewConsoleName = () => {
@@ -81,23 +80,34 @@ const ListAccessories = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setLoading(true);
-        consolesApi.deleteByIdAccessories(Number(row.id)).then((response) => {
-          setLoading(false);
+        consolesApi
+          .deleteByIdAccessories(Number(row.id))
+          .then((response) => {
+            setLoading(false);
 
-          if (response.status === 'success') {
-            getListAccessories();
-            Swal.fire({
-              title: '¡Eliminado!',
-              text: 'Accesorio eliminado correctamente.',
-              icon: 'success'
-            });
-          } else {
+            if (response.status === 'success') {
+              getListAccessories();
+              Swal.fire({
+                title: '¡Eliminado!',
+                text: 'Accesorio eliminado correctamente.',
+                icon: 'success'
+              });
+            } else {
+              Swal.fire({
+                title: '¡Ocurrio un error!',
+
+                icon: 'error'
+              });
+            }
+          })
+          .catch((error) => {
+            setLoading(false);
             Swal.fire({
               title: '¡Ocurrio un error!',
+              text: `${error.response.data.message}`,
               icon: 'error'
             });
-          }
-        });
+          });
       }
     });
   };

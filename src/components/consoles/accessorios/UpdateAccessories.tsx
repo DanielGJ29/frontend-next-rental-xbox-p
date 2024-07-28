@@ -172,7 +172,6 @@ const UpdateAccesories = (props: Props) => {
       })
       .catch((error) => {
         setLoading(false);
-        console.log('el error', error.response.data.message);
         Swal.fire({
           position: 'center',
           icon: 'error',

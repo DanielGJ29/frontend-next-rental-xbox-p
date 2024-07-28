@@ -19,11 +19,10 @@ const ChildrenItem = (props: Props) => {
 
   return (
     <div>
-      <Link key={name} style={{ textDecoration: 'none', color: 'primary.main' }} href={url}>
-        <ListItemButton sx={{ color: 'primary.main' }} selected={pathName === url}>
+      <Link key={name} style={{ textDecoration: 'none' }} href={url}>
+        <ListItemButton selected={pathName === url}>
           <ListItemIcon>{icon}</ListItemIcon>
-
-          <ListItemText sx={{ textTransform: 'capitalize', color: 'primary.lighter' }} color="primary.main" primary={name} />
+          <ListItemText sx={{ textTransform: 'capitalize', color: 'primary.contrastText' }} primary={name} />
         </ListItemButton>
       </Link>
     </div>

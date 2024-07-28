@@ -54,7 +54,9 @@ const ListClient = () => {
   };
 
   const getListClient = () => {
+    setLoading(true);
     clientAPI.getClients().then((response) => {
+      setLoading(false);
       setRows(response.data);
     });
   };

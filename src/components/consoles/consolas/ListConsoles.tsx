@@ -50,9 +50,10 @@ const ListConsoles = () => {
   };
 
   const getListConsoles = () => {
+    setLoading(true);
     consolesApi.getAllConsoles().then((response) => {
+      setLoading(false);
       setRows(response.data);
-      console.log('consoles', response.data);
     });
   };
 
@@ -82,23 +83,34 @@ const ListConsoles = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setLoading(true);
-        consolesApi.deleteConsole(Number(row.id)).then((response) => {
-          setLoading(false);
-          console.log(response);
-          if (response.status === 'success') {
-            getListConsoles();
-            Swal.fire({
-              title: '¡Eliminado!',
-              text: 'Consola eliminada correctamente.',
-              icon: 'success'
-            });
-          } else {
+        consolesApi
+          .deleteConsole(Number(row.id))
+          .then((response) => {
+            setLoading(false);
+            console.log(response);
+            if (response.status === 'success') {
+              getListConsoles();
+              Swal.fire({
+                title: '¡Eliminado!',
+                text: 'Consola eliminada correctamente.',
+                icon: 'success'
+              });
+            } else {
+              Swal.fire({
+                title: '¡Ocurrio un error!',
+                icon: 'error'
+              });
+            }
+          })
+          .catch((error) => {
+            setLoading(false);
+
             Swal.fire({
               title: '¡Ocurrio un error!',
+              text: `${error.response.data.message}`,
               icon: 'error'
             });
-          }
-        });
+          });
       }
     });
   };

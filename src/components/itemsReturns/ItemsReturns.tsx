@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
 //Components
 import SearchByCode from '../rent/SearchByCode';
@@ -41,6 +42,7 @@ import CustomDataGrid from '../shared/CustomDataGrid';
 import { formatCurrency } from '@/utils/utils';
 
 const ItemsReturns = () => {
+  const { devoluciones } = useParams();
   //***********************************************************USE STATE*****************************************************************
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -54,6 +56,12 @@ const ItemsReturns = () => {
   const [rowsSearch, setRowsSearch] = useState<[]>([]);
 
   //***********************************************************USE EFFECT*****************************************************************
+  useEffect(() => {
+    if (devoluciones) {
+      const clientId = Number(devoluciones[0]);
+      getClientById(clientId);
+    }
+  }, [devoluciones]);
 
   useEffect(() => {
     if (client) {
@@ -109,7 +117,7 @@ const ItemsReturns = () => {
         Swal.fire({
           position: 'center',
           icon: 'error',
-          title: `${error.response.data.message}`,
+          title: `No se encontraron datos`,
           showConfirmButton: false,
           timer: 2500
         });
@@ -282,15 +290,17 @@ const ItemsReturns = () => {
 
   return (
     <div>
-      <SearchByCode
-        icon={<PersonSearchIcon color="action" />}
-        title="Código Cliente"
-        name="client"
-        value={codeClient}
-        setValueInput={setCodeClient}
-        handleSearch={handleSearchClient}
-        handleSearchByKeyboard={handleSearchByKeyboard}
-      />
+      <Box width={{ xs: '100%', md: '50%' }} sx={{ margin: 'auto' }}>
+        <SearchByCode
+          icon={<PersonSearchIcon color="action" />}
+          title="Código Cliente"
+          name="client"
+          value={codeClient}
+          setValueInput={setCodeClient}
+          handleSearch={handleSearchClient}
+          handleSearchByKeyboard={handleSearchByKeyboard}
+        />
+      </Box>
 
       {client && (
         <Paper sx={{ p: 4, mt: 4 }}>
