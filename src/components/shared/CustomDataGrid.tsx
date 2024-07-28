@@ -55,7 +55,7 @@ const CustomDataGrid = (props: Props) => {
   function CustomNoRowsOverlay() {
     return (
       <StyledGridOverlay>
-        <svg style={{ flexShrink: 0 }} width="240" height="200" viewBox="0 0 184 152" aria-hidden focusable="false">
+        <svg style={{ flexShrink: 0 }} width="200" height="150" viewBox="0 0 184 152" aria-hidden focusable="false">
           <g fill="none" fillRule="evenodd">
             <g transform="translate(24 31.67)">
               <ellipse className="ant-empty-img-5" cx="67.797" cy="106.89" rx="67.797" ry="12.668" />
@@ -113,8 +113,9 @@ const CustomDataGrid = (props: Props) => {
         //boxShadow: 2,
         border: 0,
         //borderColor: 'primary.light',
+        '--DataGrid-overlayHeight': '200px',
         '& .MuiDataGrid-columnHeader': {
-          backgroundColor: 'rgb(240, 240, 240)'
+          //backgroundColor: 'rgb(240, 240, 240)'
         },
         '& .MuiDataGrid-columnsContainer': {
           backgroundColor: 'rgb(240, 240, 240)'

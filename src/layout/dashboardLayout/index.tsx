@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+
+//MATERIAL UI
+import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -12,30 +14,36 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Avatar from '@mui/material/Avatar';
+import Drawer from '@mui/material/Drawer';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Stack from '@mui/material/Stack';
+
+//MATERIAL ICON
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-
-import Footer from './Footer';
-import { mainListItems, secondaryListItems } from './listItems';
-
-import BasicBreadcrumbs from '../breadcrumb';
-import { AccountCircle } from '@mui/icons-material';
-import { Avatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
-
-//Material UI Icon
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+
+//IMG
+import logocyberplay from '@/assets/img/logocyberplay.png';
+
+//COMPONETS
+import Footer from './Footer';
+import BasicBreadcrumbs from '../breadcrumb';
+import ItemMenu from './ItemMenu';
 
 //Next-auth
-import { getSession, useSession, signOut, signIn } from 'next-auth/react';
-import type { AppProps } from 'next/app';
-
-import { sistemaAPI } from '../../server/index';
-import ItemMenu from './ItemMenu';
+import { useSession, signOut, signIn } from 'next-auth/react';
 
 //Context
 import ConfigContext from '@/context/configContext';
@@ -54,38 +62,23 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
   }),
+  //width: `calc(100%-${drawerWidth}px)`,
+  // width: `calc(100% - ${theme.spacing(9)})`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(100% - ${theme.spacing(9)})`
+  },
+
   ...(open && {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    zIndex: theme.zIndex.drawer,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
-    })
-  })
-}));
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
-  '& .MuiDrawer-paper': {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
     }),
-    boxSizing: 'border-box',
-    ...(!open && {
-      overflowX: 'hidden',
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9)
-      }
-    })
-  }
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`
+    }
+  })
 }));
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -96,8 +89,13 @@ interface Props {
 }
 
 export default function DashboardLayout({ children }: Props) {
+  const theme = useTheme();
+  const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
   const { update, data: session, status } = useSession();
-  const { menuItems, loading, onChangeLogin } = React.useContext(ConfigContext);
+  const { onChangeLogin, onChangeMode, mode } = React.useContext(ConfigContext);
+
+  //***********************************************************USE STATE*****************************************************************
+  //const [open, setOpen] = React.useState(!matchesSM ? true : false);
   const [open, setOpen] = React.useState(true);
   //const [mainMenu, setMainMenu] = React.useState<any>({ items: [] });
   const toggleDrawer = () => {
@@ -110,15 +108,7 @@ export default function DashboardLayout({ children }: Props) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  // React.useLayoutEffect(() => {
-  //   console.log('SE LANZO USEEFFECT');
-  //   sistemaAPI.getAllMenu().then((response) => {
-  //     console.log(response);
-  //     // setMainMenu(response.data);
-  //     mainMenu.items = response.data;
-  //     setMainMenu({ items: [...mainMenu.items] });
-  //   });
-  // }, []);
+  //***********************************************************USE EFFECT*****************************************************************
 
   React.useEffect(() => {
     if (session) {
@@ -126,7 +116,33 @@ export default function DashboardLayout({ children }: Props) {
     }
   }, [session]);
 
-  console.log('menu item', menuItems);
+  //***********************************************************FUNCTIONS*****************************************************************
+
+  const DrawerPermanet = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
+    '& .MuiDrawer-paper': {
+      background: mode === 'light' ? theme.palette.primary.main : theme.palette.secondary.main,
+      color: 'primary',
+      position: 'relative',
+      whiteSpace: 'nowrap',
+      width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen
+      }),
+      boxSizing: 'border-box',
+      ...(!open && {
+        overflowX: 'hidden',
+        transition: theme.transitions.create('width', {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen
+        }),
+        width: theme.spacing(7),
+        [theme.breakpoints.up('sm')]: {
+          width: theme.spacing(9)
+        }
+      })
+    }
+  }));
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -148,6 +164,7 @@ export default function DashboardLayout({ children }: Props) {
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
+      sx={{ mt: 1 }}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'bottom',
@@ -162,14 +179,28 @@ export default function DashboardLayout({ children }: Props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>
+      {session && (
+        <MenuItem sx={{ cursor: 'default', p: 3, '&:hover': { backgroundColor: 'transparent' } }}>
+          <Stack justifyContent={'center'} alignItems={'center'} rowGap={1}>
+            <Avatar alt={session?.user?.name} src={`${session?.user.avatarUrl}`} />
+            <ListItemText> {`${session?.user.name} ${session?.user.lastName} ${session?.user.motherLastName}`}</ListItemText>
+            <ListItemText sx={{ textTransform: 'capitalize' }}>
+              {' '}
+              {`${session?.user.role === 'admin' ? 'administrador' : 'invitado'}`}
+            </ListItemText>
+          </Stack>
+        </MenuItem>
+      )}
+
+      <Divider />
+
+      <MenuItem onClick={handleMenuClose} disabled={session ? false : true}>
         <ListItemIcon>
           <PersonOutlineIcon fontSize="small" />
         </ListItemIcon>
         Ver perfil
       </MenuItem>
       {/* <MenuItem onClick={handleMenuClose}>My account</MenuItem> */}
-      <Divider />
 
       <MenuItem onClick={() => signOut({ callbackUrl: '/login' })}>
         <ListItemIcon>
@@ -228,6 +259,14 @@ export default function DashboardLayout({ children }: Props) {
     </Menu>
   );
 
+  const handleChangeMode = () => {
+    if (mode === 'dark') {
+      onChangeMode('light');
+    } else {
+      onChangeMode('dark');
+    }
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -235,7 +274,9 @@ export default function DashboardLayout({ children }: Props) {
         <Toolbar
           variant="dense"
           sx={{
-            pr: '24px' // keep right padding when drawer closed
+            pr: '24px', // keep right padding when drawer closed
+            py: 1
+            //  ...(matchesSM && { py: 1 })
           }}
         >
           <IconButton
@@ -250,60 +291,143 @@ export default function DashboardLayout({ children }: Props) {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-            Dashboard
+            {/* Dashboard */}
           </Typography>
-          <IconButton color="inherit">
+
+          {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
             </Badge>
+          </IconButton> */}
+
+          <IconButton color="inherit" onClick={handleChangeMode}>
+            {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
+
           <IconButton
-            //size="large"
-            // edge="end"
-            // aria-label="account of current user"
-            // aria-controls={menuId}
-            // aria-haspopup="true"
             onClick={handleProfileMenuOpen}
             color="inherit"
+            // disableRipple={true}
+            edge={'end'}
           >
-            {/* <AccountCircle /> */}
-
-            <Avatar sx={{ width: 34, height: 34 }} alt={session?.user?.name} src={`${session?.user.avatarUrl}`} />
-            <Typography color="inherit" noWrap sx={{ ml: 1, flexGrow: 1 }}>
-              {session?.user.name}
-            </Typography>
+            <Avatar
+              sx={{ width: { xs: 30, md: 35 }, height: { xs: 30, md: 35 } }}
+              alt={session?.user?.name}
+              src={`${session?.user.avatarUrl}`}
+            />
+            {matchesSM && (
+              <Typography color="inherit" noWrap sx={{ ml: 1, flexGrow: 1 }}>
+                {session?.user.name}
+              </Typography>
+            )}
           </IconButton>
         </Toolbar>
         {renderMobileMenu}
         {renderMenu}
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <Toolbar
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            px: [1]
+
+      {matchesSM && (
+        <DrawerPermanet
+          variant={'permanent'}
+          open={open}
+          //sx={{ bgcolor: 'primary.main' }}
+          //onClose={toggleDrawer}
+          //color="primary"
+        >
+          <Toolbar
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              px: [1]
+              // bgcolor: 'primary.main'
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                columnGap: 1,
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                margin: 'auto'
+              }}
+            >
+              <Avatar sx={{ width: 44, height: 44 }} alt="Logo" src={logocyberplay.src} />
+              <Typography variant="button" color="white" sx={{ mr: 3, ...(!open && { display: 'none' }) }}>
+                Cyber Play
+              </Typography>
+            </Box>
+
+            <IconButton onClick={toggleDrawer}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </Toolbar>
+          <Divider />
+          <List component="nav">
+            <ItemMenu />
+
+            <Divider sx={{ my: 1 }} />
+          </List>
+        </DrawerPermanet>
+      )}
+
+      {!matchesSM && (
+        <Drawer
+          variant={'temporary'}
+          open={open}
+          onClose={toggleDrawer}
+          PaperProps={{
+            sx: { width: '70%', bgcolor: mode === 'light' ? 'primary.main' : 'secondary.main' }
           }}
         >
-          <IconButton onClick={toggleDrawer}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </Toolbar>
-        <Divider />
-        <List component="nav">
-          <ItemMenu />
+          <Toolbar
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              px: [1]
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                columnGap: 1,
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                margin: 'auto'
+              }}
+            >
+              <Avatar sx={{ width: 44, height: 44 }} alt="Logo" src={logocyberplay.src} />
+              <Typography variant="button" color="initial" sx={{ ...(!open && { display: 'none' }) }}>
+                Cyber Play
+              </Typography>
+            </Box>
 
-          <Divider sx={{ my: 1 }} />
-          {/* {secondaryListItems} */}
-        </List>
-      </Drawer>
+            <IconButton onClick={toggleDrawer}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </Toolbar>
+          <Divider />
+          <List component="nav">
+            <ItemMenu />
+
+            <Divider sx={{ my: 1 }} />
+          </List>
+        </Drawer>
+      )}
 
       <Box
         component="main"
         sx={{
-          backgroundColor: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900]),
+          backgroundColor: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600]),
           flexGrow: 1,
           height: '100vh',
           overflow: 'auto'

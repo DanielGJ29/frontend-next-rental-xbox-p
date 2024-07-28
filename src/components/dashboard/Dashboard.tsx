@@ -1,9 +1,14 @@
 'use client';
 
 //NEX AUT
-import { Button, Paper, Typography } from '@mui/material';
-import { useSession, signIn, signOut, getCsrfToken } from 'next-auth/react';
+import { useSession, getCsrfToken } from 'next-auth/react';
 import { useEffect } from 'react';
+
+import Grid from '@mui/material/Unstable_Grid2';
+
+import Carts from '@/components/dashboard/overview/cart';
+import { GameController } from '@phosphor-icons/react';
+import BallotIcon from '@mui/icons-material/Ballot';
 
 const Dashboard = () => {
   const { update, data: session, status } = useSession();
@@ -11,61 +16,30 @@ const Dashboard = () => {
   useEffect(() => {
     async function myFunction() {
       const csrfToken = await getCsrfToken();
-      /* ... */
-      //console.log('csrfToken de dashboard', csrfToken);
     }
     myFunction();
   }, []);
 
-  //console.log('data', data);
-  // console.log('session', Session);
-  // console.log('status', status);
-  // if (Session) {
-  //   return (
-  //     <>
-  //       LOGEADO CORRECTAMENTE <br />
-  //       {/* <button onClick={() => signOut()}>Sign out</button> */}
-  //     </>
-  //   );
-  // }
-  // return (
-  //   <>
-  //     FAIL LOGIN <br />
-  //     <button
-  //       onClick={() =>
-  //         signIn('Credentials', {
-  //           redirect: false,
-  //           username: 'daniel.zam29@gmail.com',
-  //           password: 'admin',
-  //           callbackUrl: '/'
-  //         })
-  //       }
-  //     >
-  //       Sign in
-  //     </button>
-  //   </>
-  // );
-  // console.log('session dese dashboard', session);
-
-  // console.log('status desde dashboard', status);
-
   return (
-    <Paper sx={{ p: 2 }}>
-      <Typography>DASHBOARD</Typography>
-      {/* <button
-        onClick={() =>
-          signIn('Credentials', {
-            redirect: false,
-            username: 'daniel.zam29@gmail.com',
-            password: 'admin',
-            callbackUrl: '/user'
-          })
-        }
-      >
-        Sign in
-        
-      </button> */}
-    </Paper>
+    <>
+      {/* <Paper sx={{ p: 2 }}>
+        <Typography>DASHBOARD</Typography>
+      </Paper> */}
+      <Grid container spacing={3}>
+        <Grid lg={3} sm={6} xs={12}>
+          <Carts title={'Rentar'} path="/renta" icon={<GameController size={60} weight="fill" />} sx={{ height: '100%' }} />
+        </Grid>
+        <Grid lg={3} sm={6} xs={12}>
+          <Carts title={'Devoluciones'} path="/devoluciones" icon={<BallotIcon sx={{ fontSize: 50 }} />} sx={{ height: '100%' }} />
+        </Grid>
+        {/* <Grid lg={3} sm={6} xs={12}>
+          <Carts title={'Devoluciones'} path="/devoluciones" icon={<BallotIcon sx={{ fontSize: 50 }} />} sx={{ height: '100%' }} />
+        </Grid>
+        <Grid lg={3} sm={6} xs={12}>
+          <TotalProfit sx={{ height: '100%' }} value="$15k" />
+        </Grid> */}
+      </Grid>
+    </>
   );
 };
 

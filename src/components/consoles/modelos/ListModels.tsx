@@ -19,10 +19,10 @@ import CustomDataGrid from '@/components/shared/CustomDataGrid';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 
 //Interfaces
-import { INameConsoles } from '@/interfaces/consoles';
+import { IModels } from '@/interfaces/consoles';
 
 //Components
-import NewConsoleName from './NewConsoleName';
+import NewModels from './NewModels';
 
 //utils
 import { formatDate } from '@/services/utils';
@@ -31,7 +31,7 @@ import { formatDate } from '@/services/utils';
 import Swal from 'sweetalert2';
 
 //Component
-import UpdateConsoleName from './UpdateConsoleName';
+import UpdateModels from './UpdateModels';
 
 const ListModels = () => {
   //***********************************************************USE STATE*****************************************************************
@@ -43,7 +43,7 @@ const ListModels = () => {
 
   //***********************************************************USE EFFECT*****************************************************************
   useEffect(() => {
-    getListNames();
+    getListModels();
   }, []);
 
   //***********************************************************FUNCTIONS*****************************************************************
@@ -51,8 +51,8 @@ const ListModels = () => {
     setOpenNewModal(true);
   };
 
-  const getListNames = () => {
-    consolesApi.getAllConsolesNames().then((response) => {
+  const getListModels = () => {
+    consolesApi.getAllModels().then((response) => {
       setRows(response.data);
     });
   };
@@ -63,16 +63,12 @@ const ListModels = () => {
     setOpenUpdateModal(true);
   };
 
-  const handleDeleteClick = (row: INameConsoles) => {
-    console.log('DELETE ROW', row);
-
-    console.log('usr a delete', row);
-
+  const handleDeleteClick = (row: IModels) => {
     Swal.fire({
       title: '¿Esta seguro?',
 
       html: `
-        Se eliminara: <b>${row.name}</b>,
+        Se eliminara: <b>${row.model}</b>,
         con ID: <b>${row.id}</b>,
         
       `,
@@ -85,14 +81,14 @@ const ListModels = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setLoading(true);
-        consolesApi.deleteByIdConsolesNames(Number(row.id)).then((response) => {
+        consolesApi.deleteByIdModels(Number(row.id)).then((response) => {
           setLoading(false);
-          console.log(response);
+
           if (response.status === 'success') {
-            getListNames();
+            getListModels();
             Swal.fire({
               title: '¡Eliminado!',
-              text: 'Nombre de consola eliminado correctamente.',
+              text: 'Modelo de consola eliminado correctamente.',
               icon: 'success'
             });
           } else {
@@ -109,7 +105,10 @@ const ListModels = () => {
   //***********************************************************COLUMNS*****************************************************************
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
-    { field: 'name', headerName: 'Nombre', flex: 1, minWidth: 180 },
+    { field: 'model', headerName: 'Modelo', flex: 1, minWidth: 180 },
+    { field: 'rentalPrice', headerName: 'Precio de renta', flex: 1, minWidth: 180 },
+    { field: 'status', headerName: 'Estatus', flex: 1, minWidth: 100 },
+
     {
       field: 'createdAt',
       headerName: 'Creado',
@@ -123,7 +122,19 @@ const ListModels = () => {
         return formatDate(value);
       }
     },
-    { field: 'status', headerName: 'Estatus', flex: 1, minWidth: 100 },
+    {
+      field: 'updatedAt',
+      headerName: 'Actualizado',
+      flex: 1,
+      minWidth: 100,
+      maxWidth: 150,
+      valueFormatter: (value) => {
+        if (!value) {
+          return value;
+        }
+        return formatDate(value);
+      }
+    },
     {
       field: 'actions',
       type: 'actions',
@@ -158,7 +169,7 @@ const ListModels = () => {
     <div>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button variant="contained" startIcon={<AddBoxIcon />} onClick={handleNewConsoleName}>
-          Nuevo nombre
+          Nuevo Modelo
         </Button>
       </Box>
 
@@ -176,8 +187,8 @@ const ListModels = () => {
         />
       </Paper>
 
-      <NewConsoleName open={openNewModal} setOpen={setOpenNewModal} getListNames={getListNames} />
-      {id && <UpdateConsoleName open={openUpdateModal} setOpen={setOpenUpdateModal} id={id} getListNames={getListNames} />}
+      <NewModels open={openNewModal} setOpen={setOpenNewModal} getListModels={getListModels} />
+      {id && <UpdateModels open={openUpdateModal} setOpen={setOpenUpdateModal} id={id} getListModels={getListModels} />}
     </div>
   );
 };

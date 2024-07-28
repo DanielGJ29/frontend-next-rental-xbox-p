@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ChangeEventHandler, Fragment, useState } from 'react';
+import React, { ChangeEvent, ChangeEventHandler, Fragment, useEffect, useState } from 'react';
 
 //Material UI
 import Button from '@mui/material/Button';
@@ -29,6 +29,7 @@ import {
 //Material Icon
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import SaveIcon from '@mui/icons-material/Save';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 //Share
 import Loading from '@/components/shared/Loadin';
@@ -41,32 +42,49 @@ import withReactContent from 'sweetalert2-react-content';
 import { consolesApi } from '@/server';
 
 //Interfaces
-import { INewNameconsoles } from '@/interfaces/consoles';
+import { INewModel, IModels } from '@/interfaces/consoles';
 
 interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  getListNames: Function;
+  getListModels: Function;
+  id: number;
 }
 
-const NewConsoleName = (props: Props) => {
-  const { open, setOpen, getListNames } = props;
+const UpdateModels = (props: Props) => {
+  const { open, setOpen, getListModels, id } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [name, setName] = useState<string>('');
+
+  const [formData, setFormData] = useState<INewModel>({ model: '', rentalPrice: 0 });
+
+  //USEeFFECT
+  useEffect(() => {
+    setLoading(true);
+    consolesApi.getByIdModels(id).then((response) => {
+      console.log('get model by id', response);
+      setFormData(response.data);
+      setLoading(false);
+    });
+  }, [id]);
 
   const handleClose = () => {
     setOpen(false);
-    setName('');
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    console.log(event.target.value);
-    setName(event.target.value);
+    const value = event.target.value;
+    const name = event.target.name;
+
+    if (name === 'rentalPrice') {
+      setFormData({ ...formData, [name]: Number(value) });
+      return;
+    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = () => {
-    if (!name) {
+    if (formData.model === '') {
       Swal.fire({
         position: 'center',
         icon: 'error',
@@ -74,18 +92,26 @@ const NewConsoleName = (props: Props) => {
         showConfirmButton: false,
         timer: 2500
       });
-
       return;
     }
 
-    const body: INewNameconsoles = {
-      name: name
-    };
+    if (formData.rentalPrice === 0) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Nombre requerido',
+        showConfirmButton: false,
+        timer: 2500
+      });
+      return;
+    }
 
     setLoading(true);
 
+    console.log('FORMDATA', formData);
+
     consolesApi
-      .newConsolesNames(body)
+      .updateModels(id, formData)
       .then((response) => {
         console.log('response', response);
         if (response.status === 'success') {
@@ -94,14 +120,13 @@ const NewConsoleName = (props: Props) => {
           Swal.fire({
             position: 'center',
             icon: 'success',
-            title: 'Nombre guardado correctamente.',
+            title: 'Modelo actualizado correctamente.',
             showConfirmButton: false,
             timer: 2500
           });
 
           handleClose();
-          getListNames();
-          setName('');
+          getListModels();
         }
       })
       .catch((error) => {
@@ -130,10 +155,10 @@ const NewConsoleName = (props: Props) => {
       >
         <DialogTitle id="alert-dialog-title">
           <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-            <AddBoxIcon fontSize="medium" />
+            <ModeEditIcon fontSize="medium" />
 
             <Typography variant="subtitle2" textAlign={'center'} gutterBottom>
-              Nuevo Nombre de consola
+              Editar Modelo
             </Typography>
           </Stack>
         </DialogTitle>
@@ -151,12 +176,40 @@ const NewConsoleName = (props: Props) => {
                     </Skeleton>
                   </FormControl>
                 </Grid>
-              </Grid>
-            ) : (
-              <Grid container item xs={12} md={12} justifyContent={'center'}>
                 <Grid item xs={12} md={7}>
                   <FormControl fullWidth>
-                    <TextField id="filled-basic" label="Nombre" variant="outlined" size="small" onChange={handleChange} />
+                    <Skeleton variant="text" animation="wave">
+                      <TextField id="filled-basic" label="Nombre" variant="outlined" size="small" onChange={handleChange} />
+                    </Skeleton>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            ) : (
+              <Grid container item xs={12} md={12} spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      id="filled-basic"
+                      defaultValue={formData.model}
+                      label="Modelo"
+                      variant="outlined"
+                      size="small"
+                      name="model"
+                      onChange={handleChange}
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <TextField
+                      id="filled-basic"
+                      defaultValue={formData.rentalPrice}
+                      label="RentalPrice"
+                      variant="outlined"
+                      size="small"
+                      name="rentalPrice"
+                      onChange={handleChange}
+                    />
                   </FormControl>
                 </Grid>
               </Grid>
@@ -188,4 +241,4 @@ const NewConsoleName = (props: Props) => {
   );
 };
 
-export default NewConsoleName;
+export default UpdateModels;

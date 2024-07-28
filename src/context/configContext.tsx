@@ -2,14 +2,25 @@ import React, { ReactNode, createContext, useEffect, useLayoutEffect, useState }
 
 import { sistemaAPI } from '@/server';
 
+import { PaletteMode } from '@mui/material';
+
+interface Istate {
+  mode: PaletteMode;
+  menuItems: [];
+  loading: boolean;
+  loginStatus: boolean;
+  onChangeMode: (mode: PaletteMode) => void;
+  onChangeLogin: (loginStatus: boolean) => void;
+}
+
 //Initial State
-const initialState = {
+const initialState: Istate = {
   // mode: ThemeMode.LIGHT,
-  mode: 'dark',
+  mode: 'light',
   menuItems: [],
   loading: false,
   loginStatus: false,
-  onChangeMode: (mode: any) => {},
+  onChangeMode: (mode: PaletteMode) => {},
   onChangeLogin: (loginStatus: boolean) => {}
 };
 
@@ -21,7 +32,7 @@ type ConfigProviderProps = {
 };
 //Provider
 const ConfigProvider = ({ children }: ConfigProviderProps) => {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState<Istate>(initialState);
 
   useLayoutEffect(() => {
     if (!state.loginStatus) {
@@ -33,6 +44,17 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
       setState({ ...state, menuItems: response.data });
     });
     onChangeLoading(false);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.loginStatus]);
+
+  useLayoutEffect(() => {
+    if (!state.loginStatus) {
+      console.log('LA SESSION A CADUCADO');
+      return;
+    }
+
+    console.log('LA SESSION ES ACTIVA');
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.loginStatus]);
