@@ -15,7 +15,8 @@ export const newUser = async (formData: FormData) => {
   }
 };
 
-export const EditUser = async (id: number, formData: FormData) => {
+export const editUser = async (id: number, formData: FormData) => {
+  console.log('formData', formData);
   const response = await axiosServices.patch(`/users/${id}`, formData);
   const result = await response.data;
 
