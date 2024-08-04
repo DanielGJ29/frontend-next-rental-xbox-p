@@ -5,22 +5,7 @@ import { useEffect, useState } from 'react';
 //Material UI
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import {
-  GridToolbar,
-  GridRowsProp,
-  GridRowModesModel,
-  GridRowModes,
-  DataGrid,
-  GridColDef,
-  GridToolbarContainer,
-  GridActionsCellItem,
-  GridEventListener,
-  GridRowId,
-  GridRowModel,
-  GridRowEditStopReasons,
-  GridSlots,
-  GridRenderCellParams
-} from '@mui/x-data-grid';
+import { GridColDef, GridActionsCellItem, GridRenderCellParams } from '@mui/x-data-grid';
 
 //Material icons
 import EditIcon from '@mui/icons-material/Edit';
@@ -78,15 +63,6 @@ export default function User() {
   };
 
   const handleDeleteClick = (user: any) => {
-    // Swal.fire({
-    //   position: 'center',
-    //   icon: 'success',
-    //   title: 'Usuario creado correctamente',
-    //   showConfirmButton: false,
-    //   timer: 2500
-    // });
-    console.log('usr a delete', user);
-
     Swal.fire({
       title: '¿Estas seguro?',
 
@@ -106,7 +82,7 @@ export default function User() {
         setLoading(true);
         sistemaAPI.deleteUserById(user.id).then((response) => {
           setLoading(false);
-          console.log(response);
+
           if (response.status === 'success') {
             getusers();
             Swal.fire({
@@ -224,7 +200,6 @@ export default function User() {
     sistemaAPI
       .getUserList()
       .then((response) => {
-        console.log('result de component', response);
         setLoading(false);
         setRows(response.data);
       })

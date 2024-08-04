@@ -6,8 +6,6 @@ import { authOptions } from '@/app/authOptions';
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
 
-  console.log('PROTECTED', session);
-
   if (session) {
     return NextResponse.json({ protected: true });
   } else {

@@ -1,6 +1,6 @@
 import { INewUser } from '@/interfaces/sistema';
 
-import { getUserList, getUserById, getAllRoles, newUser, EditUser, deleteUserById, getAllMenu } from '../endpoints/sistema';
+import { getUserList, getUserById, getAllRoles, newUser, editUser, deleteUserById, getAllMenu } from '../endpoints/sistema';
 
 export class SistemaAPI implements SistemaAPI {
   //CRUD User
@@ -12,8 +12,8 @@ export class SistemaAPI implements SistemaAPI {
     return newUser(formData);
   };
 
-  EditUser = (id: number, formData: FormData) => {
-    return EditUser(id, formData);
+  editUser = (id: number, formData: FormData) => {
+    return editUser(id, formData);
   };
 
   getUserById = (id: number) => {

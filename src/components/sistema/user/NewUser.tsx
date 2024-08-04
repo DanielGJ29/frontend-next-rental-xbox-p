@@ -218,7 +218,6 @@ export const NewUser = (props: Props) => {
       .then((response) => {
         setLoading(false);
         getusers();
-        console.log(response);
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -387,7 +386,14 @@ export const NewUser = (props: Props) => {
                     <Typography variant="caption" color={'GrayText'} gutterBottom>
                       Correo Electronico
                     </Typography>
-                    <TextField size="small" id="outlined-basic" defaultValue={formData?.email} variant="outlined" onChange={handleChange} />
+                    <TextField
+                      size="small"
+                      id="outlined-basic"
+                      defaultValue={formData?.email}
+                      name="email"
+                      variant="outlined"
+                      onChange={handleChange}
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} md={12}>

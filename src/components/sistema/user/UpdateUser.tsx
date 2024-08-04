@@ -214,7 +214,8 @@ export const UpdateUser = (props: Props) => {
     newFormData.append('userName', formData.userName);
 
     setLoading(true);
-    sistemaAPI.EditUser(id, newFormData).then((response) => {
+    sistemaAPI.editUser(id, newFormData).then((response) => {
+      console.log('newFormData', newFormData);
       setLoading(false);
       getusers();
 

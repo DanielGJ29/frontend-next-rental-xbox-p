@@ -23,10 +23,8 @@ axiosServices.interceptors.request.use(
   async (config) => {
     const session: any = await getSession();
     // const { data: session2, status } = useSession();
-    console.log('session next-auth desde fuction axios', session);
 
     if (!session) {
-      //console.log('redireccionamos a login');
       await signOut();
       // window.location.pathname = '/login';
       // return Promise.reject('Session Expired');
@@ -107,7 +105,6 @@ axiosServices.interceptors.response.use(
               })
                 .then(async (res) => {
                   if (!res?.ok) {
-                    console.log('res.ok fallo');
                     await signOut();
                   }
                 })
@@ -117,11 +114,9 @@ axiosServices.interceptors.response.use(
 
               //UPDATE TOKEN
               session = await getSession();
-              console.log('nueva session', session);
-              console.log('error.config', originalRequest);
+
               originalRequest.headers['Authorization'] = `Bearer ${session.user.accessToken.token}`;
               resolve(axiosServices(originalRequest));
-              //console.log('nuevo header.', error.config.headers);
             }
           } else if (
             /* Read more about handling dismissals below */
