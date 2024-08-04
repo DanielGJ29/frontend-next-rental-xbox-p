@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import Typography from '@mui/material/Typography';
 
 //apis
 import { consolesApi } from '@/server';
@@ -134,7 +135,17 @@ const ListConsoles = () => {
     { field: 'videoGameName', headerName: 'Nombre', flex: 1, minWidth: 180, valueGetter: (params: any) => params.name },
     { field: 'videoGameModel', headerName: 'Modelo', flex: 1, minWidth: 180, valueGetter: (params: any) => params.model },
     { field: 'color', headerName: 'Color', flex: 1, minWidth: 100 },
-    { field: 'serialNumber', headerName: 'Numero de serie', flex: 1, minWidth: 150 },
+    {
+      field: 'serialNumber',
+      headerName: 'Numero de serie',
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params) => (
+        <Typography textTransform={'uppercase'} variant="inherit" gutterBottom>
+          {params.value}
+        </Typography>
+      )
+    },
     { field: 'hardHDD', headerName: 'Disco duro', flex: 1, minWidth: 100 },
     {
       field: 'status',

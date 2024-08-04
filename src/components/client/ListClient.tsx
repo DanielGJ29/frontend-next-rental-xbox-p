@@ -31,6 +31,7 @@ import { formatDate } from '@/services/utils';
 //Alert
 import Swal from 'sweetalert2';
 import UpdateClient from './UpdateClient';
+import { Typography } from '@mui/material';
 
 const ListClient = () => {
   //**********************************************************USE STATE***************************************************/
@@ -134,8 +135,23 @@ const ListClient = () => {
         return value.charAt(0).toUpperCase() + value.slice(1);
       }
     },
-    { field: 'email', headerName: 'email', flex: 1, minWidth: 150 },
-    { field: 'phone', headerName: 'Telefono', flex: 1, minWidth: 100 },
+    {
+      field: 'email',
+      headerName: 'email',
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params) => (
+        <Typography textTransform={'lowercase'} variant="inherit" gutterBottom>
+          {params.value}
+        </Typography>
+      )
+    },
+    {
+      field: 'phone',
+      headerName: 'Telefono',
+      flex: 1,
+      minWidth: 100
+    },
     {
       field: 'street',
       headerName: 'Dirección',

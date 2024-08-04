@@ -30,6 +30,7 @@ import { formatDate } from '@/services/utils';
 
 //Alert
 import Swal from 'sweetalert2';
+import { Typography } from '@mui/material';
 
 const ListAccessories = () => {
   //***********************************************************USE STATE*****************************************************************
@@ -130,7 +131,17 @@ const ListAccessories = () => {
     },
     { field: 'name', headerName: 'Nombre', flex: 1, minWidth: 180 },
     { field: 'model', headerName: 'Modelo', flex: 1, minWidth: 180 },
-    { field: 'serialNumber', headerName: 'Numero de serie', flex: 1, minWidth: 180 },
+    {
+      field: 'serialNumber',
+      headerName: 'Numero de serie',
+      flex: 1,
+      minWidth: 180,
+      renderCell: (params) => (
+        <Typography textTransform={'uppercase'} variant="inherit" gutterBottom>
+          {params.value}
+        </Typography>
+      )
+    },
     { field: 'color', headerName: 'Color', flex: 1, minWidth: 180 },
 
     { field: 'characteristics', headerName: 'Caracteristicas', flex: 1, minWidth: 280 },

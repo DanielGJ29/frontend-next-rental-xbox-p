@@ -26,6 +26,7 @@ import NewModels from './NewModels';
 
 //utils
 import { formatDate } from '@/services/utils';
+import { formatCurrency } from '@/utils/utils';
 
 //Alert
 import Swal from 'sweetalert2';
@@ -106,7 +107,18 @@ const ListModels = () => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, maxWidth: 100 },
     { field: 'model', headerName: 'Modelo', flex: 1, minWidth: 180 },
-    { field: 'rentalPrice', headerName: 'Precio de renta', flex: 1, minWidth: 180 },
+    {
+      field: 'rentalPrice',
+      headerName: 'Precio de renta',
+      flex: 1,
+      minWidth: 180,
+      valueFormatter: (value) => {
+        if (!value) {
+          return value;
+        }
+        return formatCurrency(value);
+      }
+    },
     { field: 'status', headerName: 'Estatus', flex: 1, minWidth: 100 },
 
     {

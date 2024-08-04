@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 
 //Material Icon
 import AddBoxIcon from '@mui/icons-material/AddBox';
@@ -119,7 +120,17 @@ const ListControles = () => {
       }
     },
     { field: 'videoGameName', headerName: 'Consola', flex: 1, minWidth: 180, valueGetter: (params: any) => params.name },
-    { field: 'serialNumber', headerName: 'Numero de serie', flex: 1, minWidth: 180 },
+    {
+      field: 'serialNumber',
+      headerName: 'Numero de serie',
+      flex: 1,
+      minWidth: 180,
+      renderCell: (params) => (
+        <Typography textTransform={'uppercase'} variant="inherit" gutterBottom>
+          {params.value}
+        </Typography>
+      )
+    },
     { field: 'color', headerName: 'Color', flex: 1, minWidth: 180 },
     { field: 'connectionType', headerName: 'Tipo de conexión', flex: 1, minWidth: 180 },
     { field: 'status', headerName: 'Estatus', flex: 1, minWidth: 100 },

@@ -378,6 +378,7 @@ const NewConsole = (props: Props) => {
                       Numero de serie
                     </Typography>
                     <BootstrapInput
+                      sx={{ '& .MuiInputBase-input': { textTransform: 'uppercase' } }}
                       defaultValue={formData?.serialNumber}
                       id="bootstrap-input"
                       name="serialNumber"
