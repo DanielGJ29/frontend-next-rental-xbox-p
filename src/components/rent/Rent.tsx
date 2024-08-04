@@ -21,6 +21,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Alert from '@mui/material/Alert';
+import { useTheme } from '@mui/material/styles';
 
 //Material Icons
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
@@ -63,6 +64,7 @@ import Agreement from './Agreement';
 import Pay from './Pay';
 
 const Rent = () => {
+  const theme = useTheme();
   //***********************************************************USE STATE*****************************************************************
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -271,12 +273,35 @@ const Rent = () => {
   };
 
   const addToCart = (body: IAddToCart) => {
-    rentApi.addToCart(body).then((response) => {
-      setLoadingArticle(false);
-      setLoadingAccessory(false);
-      setLoadingGamepad(false);
-      getCartClient();
-    });
+    rentApi
+      .addToCart(body)
+      .then((response) => {
+        setLoadingArticle(false);
+        setLoadingAccessory(false);
+        setLoadingGamepad(false);
+        getCartClient();
+
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: `${response.message ? response.message : 'Producto agregado correctamente'}`,
+          showConfirmButton: false,
+          timer: 3500
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoadingArticle(false);
+        setLoadingAccessory(false);
+        setLoadingGamepad(false);
+        Swal.fire({
+          position: 'center',
+          icon: 'info',
+          text: `${error.response.data.message}`,
+          showConfirmButton: false,
+          timer: 3500
+        });
+      });
   };
 
   const addToCartMultiple = (arrayId: number[], name: string) => {
@@ -314,6 +339,13 @@ const Rent = () => {
           rentApi.addToCartMultiple(body).then((response) => {
             setLoadingArticle(false);
             getCartClient();
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: `${response.message ? response.message : 'Producto agregado correctamente'}`,
+              showConfirmButton: false,
+              timer: 3500
+            });
           });
         }
 
@@ -326,6 +358,13 @@ const Rent = () => {
           rentApi.addToCartMultiple(body).then((response) => {
             setLoadingGamepad(false);
             getCartClient();
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: `${response.message ? response.message : 'Producto agregado correctamente'}`,
+              showConfirmButton: false,
+              timer: 3500
+            });
           });
         }
 
@@ -338,6 +377,13 @@ const Rent = () => {
           rentApi.addToCartMultiple(body).then((response) => {
             setLoadingAccessory(false);
             getCartClient();
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: `${response.message ? response.message : 'Producto agregado correctamente'}`,
+              showConfirmButton: false,
+              timer: 3500
+            });
           });
         }
 
@@ -381,7 +427,7 @@ const Rent = () => {
                   id: item.id + '-' + 'G',
                   article: 'control',
                   name: item.name,
-                  model: 'n/a',
+                  model: item.name,
                   serialNumber: item.serialNumber,
                   rentalPrice: 50,
                   characteristics: item.color + ' ' + item.connectionType
@@ -522,11 +568,12 @@ const Rent = () => {
             setValueInput={setcodeClient}
             handleSearch={handleSearchClient}
             handleSearchByKeyboard={handleSearchByKeyboard}
+            loading={loading}
           />
 
           {/* /********SEARCH CONSOLE ******/}
           <SearchByCode
-            icon={<GiGameConsole color="action" fontSize={23} />}
+            icon={<GiGameConsole color={`${theme.palette.mode === 'light' ? theme.palette.grey[800] : 'white'}`} fontSize={23} />}
             title="Código Consola"
             name="console"
             value={codeArticle}
@@ -534,6 +581,7 @@ const Rent = () => {
             handleSearch={handleSearchArticle}
             handleSearchByKeyboard={handleSearchByKeyboard}
             disabled={valueClient && statusCart === 'active' ? false : true}
+            loading={loadingArticle}
           />
 
           {/* /********SEARCH GAMEPADS ******/}
@@ -546,6 +594,7 @@ const Rent = () => {
             handleSearch={handleSearchGamePad}
             handleSearchByKeyboard={handleSearchByKeyboard}
             disabled={valueClient && statusCart === 'active' ? false : true}
+            loading={loadingGamepad}
           />
 
           {/* /************SEARCH ACCESSORIES *************/}
@@ -558,6 +607,7 @@ const Rent = () => {
             handleSearch={handleSearchAccessory}
             handleSearchByKeyboard={handleSearchByKeyboard}
             disabled={valueClient && statusCart === 'active' ? false : true}
+            loading={loadingAccessory}
           />
 
           {/* /*********************DATES ******************/}
@@ -793,7 +843,16 @@ const Rent = () => {
                       {row.id}
                     </TableCell> */}
                         <TableCell style={{ minWidth: 100, textTransform: 'capitalize' }} align="left">
-                          {row.article}
+                          <Stack flexDirection={'row'} columnGap={1}>
+                            {row.article === 'consola' ? (
+                              <GiGameConsole color={`${theme.palette.primary.main}`} fontSize="large" />
+                            ) : row.article === 'control' ? (
+                              <SportsEsportsIcon fontSize="small" color="primary" />
+                            ) : (
+                              row.article === 'accesorio' && <HeadsetMicIcon fontSize="small" color="primary" />
+                            )}{' '}
+                            {row.article}
+                          </Stack>
                         </TableCell>
                         <TableCell style={{ minWidth: 160, textTransform: 'capitalize' }} align="left">
                           {row.name}

@@ -164,7 +164,7 @@ const ItemsReturns = () => {
               id: item.id + '-' + 'G',
               article: 'control',
               name: item.name,
-              model: 'n/a',
+              model: item.name,
               serialNumber: item.serialNumber,
               rentalPrice: 50,
               characteristics: item.color + ' ' + item.connectionType
@@ -299,6 +299,7 @@ const ItemsReturns = () => {
           setValueInput={setCodeClient}
           handleSearch={handleSearchClient}
           handleSearchByKeyboard={handleSearchByKeyboard}
+          loading={loading}
         />
       </Box>
 
