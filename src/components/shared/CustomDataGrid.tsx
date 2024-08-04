@@ -112,6 +112,7 @@ const CustomDataGrid = (props: Props) => {
       sx={{
         //boxShadow: 2,
         border: 0,
+        textTransform: 'capitalize',
         //borderColor: 'primary.light',
         '--DataGrid-overlayHeight': '200px',
         '& .MuiDataGrid-columnHeader': {

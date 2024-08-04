@@ -34,6 +34,7 @@ import { formatDate } from '@/services/utils';
 //Alert
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { Typography } from '@mui/material';
 
 const MySwal = withReactContent(Swal);
 
@@ -106,7 +107,17 @@ export default function User() {
     { field: 'name', headerName: 'Nombre', flex: 1, minWidth: 180 },
     { field: 'lastName', headerName: 'A Paterno', flex: 1, minWidth: 150 },
     { field: 'motherLastName', headerName: 'A Materno', flex: 1, minWidth: 150 },
-    { field: 'email', headerName: 'Correo', flex: 1, minWidth: 250 },
+    {
+      field: 'email',
+      headerName: 'Correo',
+      flex: 1,
+      minWidth: 250,
+      renderCell: (params) => (
+        <Typography textTransform={'lowercase'} variant="inherit" gutterBottom>
+          {params.value}
+        </Typography>
+      )
+    },
     {
       field: 'role',
       headerName: 'Rol',
@@ -136,7 +147,22 @@ export default function User() {
         return formatDate(value);
       }
     },
-    { field: 'status', headerName: 'Estatus', flex: 1, minWidth: 100 },
+    {
+      field: 'status',
+      headerName: 'Estatus',
+      flex: 1,
+      minWidth: 100,
+      renderCell: (params) =>
+        params.value === 'active' ? (
+          <Typography variant="inherit" gutterBottom>
+            activo
+          </Typography>
+        ) : (
+          <Typography variant="inherit" gutterBottom>
+            bloqueado
+          </Typography>
+        )
+    },
     {
       field: 'actions',
       type: 'actions',

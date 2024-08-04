@@ -172,7 +172,7 @@ const UpdateConsole = (props: Props) => {
     setLoading(true);
 
     const newFormData = new FormData();
-    newFormData.append('nameID', formData.nameId);
+    newFormData.append('nameId', formData.nameId);
     newFormData.append('modelId', formData.modelId);
     newFormData.append('color', formData.color);
     newFormData.append('serialNumber', formData.serialNumber);
@@ -455,6 +455,7 @@ const UpdateConsole = (props: Props) => {
                       Numero de serie
                     </Typography>
                     <BootstrapInput
+                      sx={{ '& .MuiInputBase-input': { textTransform: 'uppercase' } }}
                       defaultValue={formData?.serialNumber}
                       id="bootstrap-input"
                       name="serialNumber"

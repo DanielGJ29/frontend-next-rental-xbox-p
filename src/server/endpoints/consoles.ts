@@ -5,7 +5,7 @@ import { INewNameconsoles, INewConsole, INewModel, INewGamepad } from '@/interfa
 
 //CRUD CONSOLES
 export const getAllConsoles = async () => {
-  const response = await axiosServices.get('/videoGames');
+  const response = await axiosServices.get('/videoGame');
   const result = await response.data;
 
   if ((result.status = 'success')) {
@@ -16,7 +16,7 @@ export const getAllConsoles = async () => {
 };
 
 export const NewConsole = async (body: FormData) => {
-  const response = await axiosServices.post('/videoGames', body);
+  const response = await axiosServices.post('/videoGame', body);
   const result = await response.data;
 
   if ((result.status = 'success')) {
@@ -27,7 +27,7 @@ export const NewConsole = async (body: FormData) => {
 };
 
 export const getByIdConsole = async (id: number) => {
-  const response = await axiosServices.get(`/videoGames/${id}`);
+  const response = await axiosServices.get(`/videoGame/${id}`);
   const result = await response.data;
 
   if ((result.status = 'success')) {
@@ -38,7 +38,7 @@ export const getByIdConsole = async (id: number) => {
 };
 
 export const updateConsole = async (id: number, body: FormData) => {
-  const response = await axiosServices.patch(`/videoGames/${id}`, body);
+  const response = await axiosServices.patch(`/videoGame/${id}`, body);
   const result = await response.data;
 
   if ((result.status = 'success')) {
@@ -49,7 +49,7 @@ export const updateConsole = async (id: number, body: FormData) => {
 };
 
 export const deleteConsole = async (id: number) => {
-  const response = await axiosServices.delete(`/videoGames/${id}`);
+  const response = await axiosServices.delete(`/videoGame/${id}`);
   const result = await response.data;
 
   if ((result.status = 'success')) {
@@ -298,7 +298,7 @@ export const deleteByIdAccessories = async (id: number) => {
 
 //SEARCH CONSOLES BY KEYWORD
 export const searchConsoleByKeyword = async (keyword: string) => {
-  const response = await axiosServices.get(`/videoGames/searchByKeyword/${keyword}`);
+  const response = await axiosServices.get(`/videoGame/searchByKeyword/${keyword}`);
   const result = await response.data;
 
   if ((result.status = 'success')) {
@@ -322,7 +322,7 @@ export const searchAccessoryByKeyword = async (keyword: string) => {
 
 //SEARCH CONSOLES BY SERIAL NUMBER
 export const searchConsoleBySerialNumber = async (serialNumber: string) => {
-  const response = await axiosServices.get(`/videoGames/searchBySerialNumber/${serialNumber}`);
+  const response = await axiosServices.get(`/videoGame/searchBySerialNumber/${serialNumber}`);
   const result = await response.data;
 
   if ((result.status = 'success')) {

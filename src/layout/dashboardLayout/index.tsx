@@ -318,8 +318,8 @@ export default function DashboardLayout({ children }: Props) {
               src={`${session?.user.avatarUrl}`}
             />
             {matchesSM && (
-              <Typography color="inherit" noWrap sx={{ ml: 1, flexGrow: 1 }}>
-                {session?.user.name}
+              <Typography color="inherit" textTransform={'capitalize'} noWrap sx={{ ml: 1, flexGrow: 1 }}>
+                {session?.user.userName}
               </Typography>
             )}
           </IconButton>
