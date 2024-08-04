@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 //Material Icons
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Props {
   icon: any;
@@ -20,10 +21,11 @@ interface Props {
   handleSearch: any;
   handleSearchByKeyboard: any;
   disabled?: boolean;
+  loading: boolean;
 }
 
 const SearchByCode = (props: Props) => {
-  const { icon, title, name, value, setValueInput, handleSearch, handleSearchByKeyboard, disabled } = props;
+  const { icon, title, name, value, setValueInput, handleSearch, handleSearchByKeyboard, disabled, loading } = props;
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -43,8 +45,9 @@ const SearchByCode = (props: Props) => {
         disabled={disabled}
         onChange={(e) => setValueInput(e.target.value)}
       />
+
       <IconButton type="submit" sx={{ p: '10px' }} aria-label="search" disabled={disabled} onClick={handleSearch}>
-        <SearchIcon />
+        {loading ? <CircularProgress size={20} /> : <SearchIcon />}
       </IconButton>
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
       <IconButton
