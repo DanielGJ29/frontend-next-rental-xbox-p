@@ -49,10 +49,9 @@ const ListControles = () => {
   const getListGamepads = () => {
     setLoading(true);
     consolesApi.getGamepads().then((response) => {
+      setLoading(false);
       setRows(response.data);
     });
-
-    setLoading(false);
   };
 
   const handleNewConsoleName = () => {
