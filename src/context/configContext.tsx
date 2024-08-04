@@ -50,11 +50,8 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
 
   useLayoutEffect(() => {
     if (!state.loginStatus) {
-      console.log('LA SESSION A CADUCADO');
       return;
     }
-
-    console.log('LA SESSION ES ACTIVA');
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.loginStatus]);

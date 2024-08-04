@@ -28,7 +28,7 @@ const AuthGuard = ({ children }: GuardProps) => {
     const fetchData = async () => {
       const res = await fetch('/api/auth/protected');
       const json = await res?.json();
-      console.log('session de AuthGuard', session);
+
       if (!json?.protected) {
         console.log('session de auth expirada', session);
         console.log('se vencio la session refrescamos nueva session');
