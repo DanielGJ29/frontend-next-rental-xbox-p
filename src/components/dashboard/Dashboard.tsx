@@ -42,7 +42,7 @@ const Dashboard = () => {
           <TotalProfit sx={{ height: '100%' }} value="$15k" />
         </Grid> */}
       </Grid>
-      <Note sx={{ mt: 8 }} />
+      <Note />
     </>
   );
 };
