@@ -185,6 +185,7 @@ export default function SignInSide({ providers, csrfToken }: Props) {
               name="email"
               autoComplete="email"
               autoFocus
+              defaultValue={'test@dominio.test'}
             />
             <TextField
               margin="normal"
@@ -195,6 +196,7 @@ export default function SignInSide({ providers, csrfToken }: Props) {
               type="password"
               id="password"
               autoComplete="current-password"
+              defaultValue={'admin'}
             />
             <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Recordar" />
             {loading ? (

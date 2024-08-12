@@ -6,9 +6,12 @@ import { useEffect } from 'react';
 
 import Grid from '@mui/material/Unstable_Grid2';
 
-import Carts from '@/components/dashboard/overview/cart';
 import { GameController } from '@phosphor-icons/react';
 import BallotIcon from '@mui/icons-material/Ballot';
+
+//Components
+import Carts from '@/components/dashboard/overview/cart';
+import Note from './overview/note';
 
 const Dashboard = () => {
   const { update, data: session, status } = useSession();
@@ -39,6 +42,7 @@ const Dashboard = () => {
           <TotalProfit sx={{ height: '100%' }} value="$15k" />
         </Grid> */}
       </Grid>
+      <Note sx={{ mt: 8 }} />
     </>
   );
 };
